@@ -13,10 +13,6 @@ export default function Home() {
         priority
         className="mx-auto"
       />
-
-      <div className="w-96 h-w-96">
-        <Chess />
-      </div>
     </div>
   );
 }

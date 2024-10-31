@@ -33,22 +33,16 @@ const navListMenuItems = [
     route: "pets",
   },
   {
-    title: "Cat Pictures",
+    title: "Pets",
     description: "Meet and learn about our dedication",
     icon: UserGroupIcon,
-    route: "pets",
-  },
-  {
-    title: "Dog Pictures",
-    description: "Find the perfect solution for your needs.",
-    icon: Bars4Icon,
     route: "pets",
   },
   {
     title: "Chess",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
-    route: "pets",
+    route: "chess",
   },
   {
     title: "My Music",
@@ -63,7 +57,7 @@ const navListMenuItems = [
     route: "pets",
   },
   {
-    title: "Book suggestions",
+    title: "Books",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
     route: "pets",
