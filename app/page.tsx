@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="w-screen">
+    <div className="flex flex-col w-screen">
       <HeaderMenu />
       <Image
         aria-hidden
@@ -11,6 +11,7 @@ export default function Home() {
         alt="Globe icon"
         width={400}
         height={400}
+        priority
       />
     </div>
   );
