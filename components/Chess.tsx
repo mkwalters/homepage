@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 
-type SquareStyles = Record<string, React.CSSProperties>;
+type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
   const [game, setGame] = useState(new Chess());
@@ -99,25 +99,25 @@ const ChessGame: React.FC = () => {
   }
 
   // TODO why is this unused? Can this board promote properly?
-  function onPromotionPieceSelect(piece: string) {
-    if (piece) {
-      const gameCopy = new Chess(game.fen());
-      gameCopy.move({
-        from: moveFrom!,
-        to: moveTo!,
-        promotion: piece[1].toLowerCase() ?? "q",
-      });
-      setGame(gameCopy);
-    }
-    setMoveFrom(null);
-    setMoveTo(null);
-    setShowPromotionDialog(false);
-    setOptionSquares({});
-  }
+  //   function onPromotionPieceSelect(piece: string) {
+  //     if (piece) {
+  //       const gameCopy = new Chess(game.fen());
+  //       gameCopy.move({
+  //         from: moveFrom!,
+  //         to: moveTo!,
+  //         promotion: piece[1].toLowerCase() ?? "q",
+  //       });
+  //       setGame(gameCopy);
+  //     }
+  //     setMoveFrom(null);
+  //     setMoveTo(null);
+  //     setShowPromotionDialog(false);
+  //     setOptionSquares({});
+  //   }
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";
-    setRightClickedSquares((prev: any) => ({
+    setRightClickedSquares((prev: SquareStyles) => ({
       ...prev,
       [square]:
         prev[square] && prev[square].backgroundColor === colour
