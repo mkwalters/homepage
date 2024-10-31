@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import {
   Navbar,
   Collapse,
@@ -153,11 +153,12 @@ function NavListMenu() {
 }
 
 function NavList() {
+  const router = useRouter();
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
       <Typography
         as="a"
-        href="#"
+        onClick={() => router.push("/")}
         variant="small"
         color="blue-gray"
         className="font-medium"
