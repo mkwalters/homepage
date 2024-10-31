@@ -1,19 +1,11 @@
 "use client";
 import React from "react";
-import Image from "next/image";
+import { Gallery } from "@/components/Gallery";
 
 const Pets = () => {
   return (
     <div>
-      <Image
-        aria-hidden
-        src="/demiAtThePark.jpg"
-        alt="Globe icon"
-        width={400}
-        height={400}
-        priority
-        className="mx-auto"
-      />
+      <Gallery images={["/demiAtThePark.jpg", "/yoda.jpeg"]} />
     </div>
   );
 };
