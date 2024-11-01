@@ -12,6 +12,15 @@ export default function Home() {
         priority
         className="mx-auto"
       />
+      <Image
+        aria-hidden
+        src="/yoda.jpeg"
+        alt="Globe icon"
+        width={400}
+        height={400}
+        priority
+        className="mx-auto"
+      />
     </div>
   );
 }

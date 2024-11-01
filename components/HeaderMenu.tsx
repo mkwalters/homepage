@@ -29,7 +29,7 @@ const navListMenuItems = [
     title: "Puzzles",
     description: "Find the perfect solution for your needs.",
     icon: SquaresPlusIcon,
-    route: "pets",
+    route: "",
   },
   {
     title: "Pets",
@@ -45,18 +45,6 @@ const navListMenuItems = [
   },
   {
     title: "My Music",
-    description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
-    route: "pets",
-  },
-  {
-    title: "Gardening",
-    description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
-    route: "pets",
-  },
-  {
-    title: "Books",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
     route: "pets",
