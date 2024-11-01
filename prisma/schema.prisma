@@ -21,3 +21,4 @@ model Move {
   promotion String?
   createdAt DateTime @default(now())
 }
+
