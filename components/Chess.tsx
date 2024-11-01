@@ -6,7 +6,11 @@ import { Chess, Square, Move } from "chess.js";
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
-  const [game, setGame] = useState(new Chess());
+  const [game, setGame] = useState(
+    new Chess(
+      "r1bq1rk1/pppn1ppp/4bn2/3pN3/3P4/2N1B3/PPP2PPP/R2Q1RK1 w - - 0 18"
+    )
+  );
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [moveTo, setMoveTo] = useState<Square | null>(null);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
@@ -47,6 +51,25 @@ const ChessGame: React.FC = () => {
     };
     setOptionSquares(newSquares);
     return true;
+  }
+  async function sendMoveToApi(
+    from: Square,
+    to: Square,
+    promotion: string = "q"
+  ) {
+    try {
+      const response = await fetch("/api/move", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ from, to, promotion }),
+      });
+      const data = await response.json();
+      console.log("Move transmitted to API:", data);
+    } catch (error) {
+      console.error("Failed to transmit move:", error);
+    }
   }
 
   function onSquareClick(square: Square) {
@@ -91,6 +114,9 @@ const ChessGame: React.FC = () => {
         return;
       }
 
+      // Send move to API
+      sendMoveToApi(moveFrom, square);
+
       setGame(gameCopy);
       setMoveFrom(null);
       setMoveTo(null);
@@ -99,21 +125,21 @@ const ChessGame: React.FC = () => {
   }
 
   // TODO why is this unused? Can this board promote properly?
-  //   function onPromotionPieceSelect(piece: string) {
-  //     if (piece) {
-  //       const gameCopy = new Chess(game.fen());
-  //       gameCopy.move({
-  //         from: moveFrom!,
-  //         to: moveTo!,
-  //         promotion: piece[1].toLowerCase() ?? "q",
-  //       });
-  //       setGame(gameCopy);
-  //     }
-  //     setMoveFrom(null);
-  //     setMoveTo(null);
-  //     setShowPromotionDialog(false);
-  //     setOptionSquares({});
+  // function onPromotionPieceSelect(piece: string) {
+  //   if (piece) {
+  //     const gameCopy = new Chess(game.fen());
+  //     gameCopy.move({
+  //       from: moveFrom!,
+  //       to: moveTo!,
+  //       promotion: piece[1].toLowerCase() ?? "q",
+  //     });
+  //     setGame(gameCopy);
   //   }
+  //   setMoveFrom(null);
+  //   setMoveTo(null);
+  //   setShowPromotionDialog(false);
+  //   setOptionSquares({});
+  // }
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";

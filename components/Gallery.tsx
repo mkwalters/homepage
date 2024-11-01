@@ -7,9 +7,16 @@ type GalleryProps = {
 
 export function Gallery({ images }: GalleryProps) {
   return (
-    <Carousel className="rounded-xl flex ">
+    <Carousel className="rounded-xl flex">
       {images.map((image, index) => (
-        <Image src={image} alt="" key={index} className=" object-cover" />
+        <Image
+          src={image}
+          alt=""
+          key={index}
+          className="object-cover"
+          width={400}
+          height={600}
+        />
       ))}
     </Carousel>
   );

@@ -18,7 +18,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import {
-  Bars4Icon,
   SquaresPlusIcon,
   SunIcon,
   UserGroupIcon,
@@ -30,40 +29,22 @@ const navListMenuItems = [
     title: "Puzzles",
     description: "Find the perfect solution for your needs.",
     icon: SquaresPlusIcon,
-    route: "pets",
+    route: "",
   },
   {
-    title: "Cat Pictures",
+    title: "Pets",
     description: "Meet and learn about our dedication",
     icon: UserGroupIcon,
-    route: "pets",
-  },
-  {
-    title: "Dog Pictures",
-    description: "Find the perfect solution for your needs.",
-    icon: Bars4Icon,
     route: "pets",
   },
   {
     title: "Chess",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
-    route: "pets",
+    route: "chess",
   },
   {
     title: "My Music",
-    description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
-    route: "pets",
-  },
-  {
-    title: "Gardening",
-    description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
-    route: "pets",
-  },
-  {
-    title: "Book suggestions",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
     route: "pets",

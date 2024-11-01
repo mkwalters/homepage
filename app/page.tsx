@@ -1,4 +1,3 @@
-import Chess from "@/components/Chess";
 import Image from "next/image";
 
 export default function Home() {
@@ -13,10 +12,15 @@ export default function Home() {
         priority
         className="mx-auto"
       />
-
-      <div className="w-96 h-w-96">
-        <Chess />
-      </div>
+      <Image
+        aria-hidden
+        src="/yoda.jpeg"
+        alt="Globe icon"
+        width={400}
+        height={400}
+        priority
+        className="mx-auto"
+      />
     </div>
   );
 }

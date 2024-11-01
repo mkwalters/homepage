@@ -38,3 +38,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.env
+.env.local
+
+DATABASE_URL="postgresql://username:password@localhost:5432/mydatabase"
+
