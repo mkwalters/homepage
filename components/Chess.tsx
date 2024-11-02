@@ -187,26 +187,6 @@ const ChessGame: React.FC = () => {
           showPromotionDialog={showPromotionDialog}
         />
       )}
-      <button
-        style={{}}
-        onClick={() => {
-          safeGameMutate((game) => game.reset());
-          setOptionSquares({});
-          setRightClickedSquares({});
-        }}
-      >
-        reset
-      </button>
-      <button
-        style={{}}
-        onClick={() => {
-          safeGameMutate((game) => game.undo());
-          setOptionSquares({});
-          setRightClickedSquares({});
-        }}
-      >
-        undo
-      </button>
     </div>
   );
 };
