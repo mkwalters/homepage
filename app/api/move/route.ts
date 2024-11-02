@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No active game" }, { status: 404 });
     }
 
-    const { moves, ...gameDetails } = game;
+    const { moves } = game;
     const sortedMoves = moves.sort((a, b) => a.moveNumber - b.moveNumber);
 
     // Set up the chess board with current game state
