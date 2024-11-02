@@ -21,7 +21,6 @@ const ChessGame: React.FC = () => {
   const [currentColorToPlay, setCurrentColorToPlay] = useState<
     "w" | "b" | undefined
   >(undefined);
-  const [readyForGame, setReadyForGame] = useState<boolean>(false);
 
   // function safeGameMutate(modify: (game: Chess) => void) {
   //   setGame((g) => {
@@ -31,10 +30,6 @@ const ChessGame: React.FC = () => {
   //     return update;
   //   });
   // }
-
-  useEffect(() => {
-    setReadyForGame(!!myPiecesColor && !!game);
-  }, [game, myPiecesColor]);
 
   // TODO lets properly type this API response
   useEffect(() => {
