@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 import { Spinner } from "@material-tailwind/react";
+import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -21,6 +22,8 @@ const ChessGame: React.FC = () => {
   const [currentColorToPlay, setCurrentColorToPlay] = useState<
     "w" | "b" | undefined
   >(undefined);
+  const [boardOrientation, setBoardOrientation] =
+    useState<BoardOrientation>("white");
 
   // function safeGameMutate(modify: (game: Chess) => void) {
   //   setGame((g) => {
@@ -49,6 +52,9 @@ const ChessGame: React.FC = () => {
               promotion: move.promotion,
             });
           });
+          setBoardOrientation(
+            data.game.playerColor !== "w" ? "white" : "black"
+          );
 
           // Update the game state
           setMyPiecesColor(data.game.playerColor as "w" | "b");
@@ -94,6 +100,7 @@ const ChessGame: React.FC = () => {
 
   async function sendMoveToApi(from: Square, to: Square, promotion?: string) {
     try {
+      console.log("Sending move to API:", { from, to, promotion });
       const response = await fetch("/api/move", {
         method: "POST",
         headers: {
@@ -110,11 +117,15 @@ const ChessGame: React.FC = () => {
 
   const onSquareClick = useCallback(
     (square: Square) => {
-      if (myPiecesColor === currentColorToPlay) {
-        console.log("Not ready for game or not my turn");
-        return;
-      }
+      // if (myPiecesColor === currentColorToPlay) {
+      //   console.log("Not ready for game or not my turn");
+      //   return;
+      // }
       setRightClickedSquares({});
+
+      console.log("Square clicked:", square);
+      console.log("Move from:", moveFrom);
+      console.log("Move to:", moveTo);
       if (!moveFrom) {
         if (getMoveOptions(square)) setMoveFrom(square);
         return;
@@ -128,6 +139,7 @@ const ChessGame: React.FC = () => {
         const foundMove = moves.find(
           (m) => m.from === moveFrom && m.to === square
         );
+        console.log("Found move:", foundMove);
         if (!foundMove) {
           if (getMoveOptions(square)) setMoveFrom(square);
           return;
@@ -164,6 +176,7 @@ const ChessGame: React.FC = () => {
         setMoveFrom(null);
         setMoveTo(null);
         setOptionSquares({});
+        setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
     [myPiecesColor, currentColorToPlay]
@@ -213,6 +226,7 @@ const ChessGame: React.FC = () => {
           }}
           promotionToSquare={moveTo}
           showPromotionDialog={showPromotionDialog}
+          boardOrientation={boardOrientation}
         />
       ) : (
         <div className="flex mx-auto ">
