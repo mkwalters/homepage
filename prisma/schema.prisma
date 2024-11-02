@@ -14,11 +14,22 @@ datasource db {
 }
 
 
-model Move {
-  id        Int    @id @default(autoincrement())
-  from      String
-  to        String
-  promotion String?
+model Game {
+  id        Int     @id @default(autoincrement())
   createdAt DateTime @default(now())
+  active    Boolean @default(true)
+  moves     Move[]
 }
 
+model Move {
+  id         Int     @id @default(autoincrement())
+  from       String
+  to         String
+  promotion  String?
+  moveNumber Int
+  createdAt  DateTime @default(now())
+  game       Game     @relation(fields: [gameId], references: [id])
+  gameId     Int
+
+  @@unique([gameId, moveNumber]) // Ensures unique move numbers per game
+}

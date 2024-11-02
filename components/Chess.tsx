@@ -6,11 +6,7 @@ import { Chess, Square, Move } from "chess.js";
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
-  const [game, setGame] = useState(
-    new Chess(
-      "r1bq1rk1/pppn1ppp/4bn2/3pN3/3P4/2N1B3/PPP2PPP/R2Q1RK1 w - - 0 18"
-    )
-  );
+  const [game, setGame] = useState(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [moveTo, setMoveTo] = useState<Square | null>(null);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
@@ -52,11 +48,7 @@ const ChessGame: React.FC = () => {
     setOptionSquares(newSquares);
     return true;
   }
-  async function sendMoveToApi(
-    from: Square,
-    to: Square,
-    promotion: string = "q"
-  ) {
+  async function sendMoveToApi(from: Square, to: Square, promotion?: string) {
     try {
       const response = await fetch("/api/move", {
         method: "POST",
@@ -107,7 +99,6 @@ const ChessGame: React.FC = () => {
       const move = gameCopy.move({
         from: moveFrom,
         to: square,
-        promotion: "q",
       });
       if (move === null) {
         if (getMoveOptions(square)) setMoveFrom(square);
