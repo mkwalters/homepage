@@ -69,6 +69,7 @@ const ChessGame: React.FC = () => {
 
           // Update the game state
           setMyPiecesColor(data.game.color);
+          setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
           setGame(gameCopy);
         } else {
           console.error("Failed to fetch moves:", data.error);
@@ -156,7 +157,7 @@ const ChessGame: React.FC = () => {
         return;
       }
 
-      const gameCopy = new Chess(game.fen());
+      const gameCopy = new Chess(game!.fen());
       const move = gameCopy.move({
         from: moveFrom,
         to: square,
