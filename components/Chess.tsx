@@ -32,17 +32,6 @@ const ChessGame: React.FC = () => {
   //   });
   // }
 
-  const ableToMove = useCallback(
-    (
-      myPiecesColor: "w" | "b" | undefined,
-      currentColorToPlay: "w" | "b" | undefined
-    ) => {
-      if (!myPiecesColor || !currentColorToPlay) return false;
-      return myPiecesColor === currentColorToPlay;
-    },
-    [currentColorToPlay, myPiecesColor]
-  );
-
   useEffect(() => {
     setReadyForGame(!!myPiecesColor && !!game);
   }, [game, myPiecesColor]);
@@ -54,7 +43,6 @@ const ChessGame: React.FC = () => {
       try {
         const response = await fetch("/api/game");
         const data = await response.json();
-        console.log("data:", data);
 
         if (response.ok) {
           // Create a new Chess instance and apply all moves sequentially
@@ -68,7 +56,7 @@ const ChessGame: React.FC = () => {
           });
 
           // Update the game state
-          setMyPiecesColor(data.game.color);
+          setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
           setGame(gameCopy);
         } else {
@@ -125,57 +113,66 @@ const ChessGame: React.FC = () => {
     }
   }
 
-  function onSquareClick(square: Square) {
-    if (!readyForGame || !ableToMove(myPiecesColor, currentColorToPlay)) return;
-    setRightClickedSquares({});
-    if (!moveFrom) {
-      if (getMoveOptions(square)) setMoveFrom(square);
-      return;
-    }
-
-    if (!moveTo) {
-      const moves = game!.moves({ square: moveFrom, verbose: true }) as Move[];
-      const foundMove = moves.find(
-        (m) => m.from === moveFrom && m.to === square
-      );
-      if (!foundMove) {
+  const onSquareClick = useCallback(
+    (square: Square) => {
+      if (myPiecesColor === currentColorToPlay) {
+        console.log("Not ready for game or not my turn");
+        return;
+      }
+      setRightClickedSquares({});
+      if (!moveFrom) {
         if (getMoveOptions(square)) setMoveFrom(square);
         return;
       }
 
-      setMoveTo(square);
+      if (!moveTo) {
+        const moves = game!.moves({
+          square: moveFrom,
+          verbose: true,
+        }) as Move[];
+        const foundMove = moves.find(
+          (m) => m.from === moveFrom && m.to === square
+        );
+        if (!foundMove) {
+          if (getMoveOptions(square)) setMoveFrom(square);
+          return;
+        }
 
-      if (
-        (foundMove.color === "w" &&
-          foundMove.piece === "p" &&
-          square[1] === "8") ||
-        (foundMove.color === "b" &&
-          foundMove.piece === "p" &&
-          square[1] === "1")
-      ) {
-        setShowPromotionDialog(true);
-        return;
+        setMoveTo(square);
+
+        if (
+          (foundMove.color === "w" &&
+            foundMove.piece === "p" &&
+            square[1] === "8") ||
+          (foundMove.color === "b" &&
+            foundMove.piece === "p" &&
+            square[1] === "1")
+        ) {
+          setShowPromotionDialog(true);
+          return;
+        }
+
+        const gameCopy = new Chess(game!.fen());
+        const move = gameCopy.move({
+          from: moveFrom,
+          to: square,
+        });
+        if (move === null) {
+          if (getMoveOptions(square)) setMoveFrom(square);
+          return;
+        }
+
+        // Send move to API
+        sendMoveToApi(moveFrom, square);
+
+        setGame(gameCopy);
+        setMoveFrom(null);
+        setMoveTo(null);
+        setOptionSquares({});
       }
-
-      const gameCopy = new Chess(game!.fen());
-      const move = gameCopy.move({
-        from: moveFrom,
-        to: square,
-      });
-      if (move === null) {
-        if (getMoveOptions(square)) setMoveFrom(square);
-        return;
-      }
-
-      // Send move to API
-      sendMoveToApi(moveFrom, square);
-
-      setGame(gameCopy);
-      setMoveFrom(null);
-      setMoveTo(null);
-      setOptionSquares({});
-    }
-  }
+    },
+    [myPiecesColor, currentColorToPlay]
+  );
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";
@@ -191,14 +188,14 @@ const ChessGame: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-24">
       <h3>
-        {ableToMove(myPiecesColor, currentColorToPlay) ? (
+        {myPiecesColor !== currentColorToPlay ? (
           <p>
-            Please make a move mnd check back later. I try to play my moves
+            Please make a move and check back later. I try to play my moves
             within 24 hours. Thanks and good luck!
           </p>
         ) : (
           <p>
-            It is current my turn to play so please check back later. I try to
+            It is currently my turn to play so please check back later. I try to
             make my moves within 24 hours. Thanks!
           </p>
         )}
