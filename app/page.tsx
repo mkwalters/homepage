@@ -1,6 +1,5 @@
 "use client";
 import { useCalendlyContext } from "@/context/CalendlyContext";
-import { Typography } from "@material-tailwind/react";
 import Image from "next/image";
 import { InlineWidget } from "react-calendly";
 

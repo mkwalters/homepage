@@ -16,14 +16,14 @@ const ChessGame: React.FC = () => {
   );
   const [optionSquares, setOptionSquares] = useState<SquareStyles>({});
 
-  function safeGameMutate(modify: (game: Chess) => void) {
-    setGame((g) => {
-      if (!g) return;
-      const update = new Chess(g.fen());
-      modify(update);
-      return update;
-    });
-  }
+  // function safeGameMutate(modify: (game: Chess) => void) {
+  //   setGame((g) => {
+  //     if (!g) return;
+  //     const update = new Chess(g.fen());
+  //     modify(update);
+  //     return update;
+  //   });
+  // }
 
   useEffect(() => {
     // Fetch all moves from the API and update the game state

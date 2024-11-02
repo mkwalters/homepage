@@ -23,7 +23,6 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
-import { InlineWidget } from "react-calendly";
 import { useCalendlyContext } from "@/context/CalendlyContext";
 
 const navListMenuItems = [
