@@ -26,6 +26,12 @@ import { useRouter } from "next/navigation";
 
 const navListMenuItems = [
   {
+    title: "Chess",
+    description: "Learn how we can help you achieve your goals.",
+    icon: SunIcon,
+    route: "chess",
+  },
+  {
     title: "Puzzles",
     description: "Find the perfect solution for your needs.",
     icon: SquaresPlusIcon,
@@ -38,13 +44,13 @@ const navListMenuItems = [
     route: "pets",
   },
   {
-    title: "Chess",
+    title: "My Music",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
-    route: "chess",
+    route: "pets",
   },
   {
-    title: "My Music",
+    title: "Gardening",
     description: "Learn how we can help you achieve your goals.",
     icon: SunIcon,
     route: "pets",
@@ -104,7 +110,7 @@ function NavListMenu() {
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
-              Have some fun
+              Interests
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`hidden h-3 w-3 transition-transform lg:block ${

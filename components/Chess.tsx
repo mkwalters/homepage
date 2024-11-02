@@ -81,6 +81,7 @@ const ChessGame: React.FC = () => {
     setOptionSquares(newSquares);
     return true;
   }
+
   async function sendMoveToApi(from: Square, to: Square, promotion?: string) {
     try {
       const response = await fetch("/api/move", {
@@ -149,23 +150,6 @@ const ChessGame: React.FC = () => {
     }
   }
 
-  // TODO why is this unused? Can this board promote properly?
-  // function onPromotionPieceSelect(piece: string) {
-  //   if (piece) {
-  //     const gameCopy = new Chess(game.fen());
-  //     gameCopy.move({
-  //       from: moveFrom!,
-  //       to: moveTo!,
-  //       promotion: piece[1].toLowerCase() ?? "q",
-  //     });
-  //     setGame(gameCopy);
-  //   }
-  //   setMoveFrom(null);
-  //   setMoveTo(null);
-  //   setShowPromotionDialog(false);
-  //   setOptionSquares({});
-  // }
-
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";
     setRightClickedSquares((prev: SquareStyles) => ({
@@ -179,6 +163,10 @@ const ChessGame: React.FC = () => {
 
   return (
     <div style={{}}>
+      {/* Display whose turn it is */}
+      <h3>
+        {game ? (game.turn() === "w" ? "White's Turn" : "Black's Turn") : ""}
+      </h3>
       {game && (
         <Chessboard
           id="chess"
