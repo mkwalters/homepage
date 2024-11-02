@@ -4,6 +4,30 @@ import { Chess } from "chess.js";
 
 const prisma = new PrismaClient();
 
+export async function GET() {
+  try {
+    const game = await prisma.game.findFirst({
+      where: { active: true },
+      include: { moves: true },
+    });
+
+    if (!game) {
+      return NextResponse.json({ error: "No active game" }, { status: 404 });
+    }
+
+    // Sort the moves by moveNumber
+    const sortedMoves = game.moves.sort((a, b) => a.moveNumber - b.moveNumber);
+
+    return NextResponse.json({ moves: sortedMoves });
+  } catch (error) {
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Failed to retrieve moves" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: Request) {
   const { from, to, promotion } = await req.json();
 
