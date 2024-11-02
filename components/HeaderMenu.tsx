@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   Collapse,
@@ -23,6 +23,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { useCalendlyContext } from "@/context/CalendlyContext";
 
 const navListMenuItems = [
   {
@@ -59,8 +60,8 @@ const navListMenuItems = [
 
 function NavListMenu() {
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const renderItems = navListMenuItems.map(
     ({ icon, title, description, route }, key) => (
@@ -141,6 +142,8 @@ function NavListMenu() {
 
 function NavList() {
   const router = useRouter();
+  const { toggleCalendlyModal } = useCalendlyContext();
+
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
       <Typography
@@ -160,7 +163,10 @@ function NavList() {
         color="blue-gray"
         className="font-medium"
       >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
+        <ListItem
+          className="flex items-center gap-2 py-2 pr-4"
+          onClick={toggleCalendlyModal}
+        >
           Get in touch
         </ListItem>
       </Typography>
