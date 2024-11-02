@@ -12,10 +12,16 @@ export async function POST(req: Request) {
         from,
         to,
         promotion,
+        gameId: 1,
+        moveNumber: 1,
       },
     });
 
-    return NextResponse.json({ message: "Move saved", move: newMove });
+    const newGame = await prisma.game.create({
+      data: {},
+    });
+
+    return NextResponse.json({ message: "Move saved", move: newGame });
   } catch (error) {
     console.error("Database error:", error);
     return NextResponse.json({ error: "Failed to save move" }, { status: 500 });
