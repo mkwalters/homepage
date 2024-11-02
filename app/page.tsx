@@ -16,7 +16,6 @@ export default function Home() {
         priority
         className="mx-auto"
       />
-      <p className="text-white">{JSON.stringify(isCalendlyModalOpen)}</p>
 
       {isCalendlyModalOpen && (
         <div className="App">
