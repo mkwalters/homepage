@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
-  const [game, setGame] = useState(new Chess());
+  const [game, setGame] = useState<Chess | undefined>(undefined);
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [moveTo, setMoveTo] = useState<Square | null>(null);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
@@ -17,13 +17,46 @@ const ChessGame: React.FC = () => {
 
   function safeGameMutate(modify: (game: Chess) => void) {
     setGame((g) => {
+      if (!g) return;
       const update = new Chess(g.fen());
       modify(update);
       return update;
     });
   }
 
+  useEffect(() => {
+    // Fetch all moves from the API and update the game state
+    async function fetchMoves() {
+      try {
+        const response = await fetch("/api/move");
+        const data = await response.json();
+
+        if (response.ok) {
+          // Create a new Chess instance and apply all moves sequentially
+          const gameCopy = new Chess();
+          data.moves.forEach((move: Move) => {
+            gameCopy.move({
+              from: move.from,
+              to: move.to,
+              promotion: move.promotion,
+            });
+          });
+
+          // Update the game state
+          setGame(gameCopy);
+        } else {
+          console.error("Failed to fetch moves:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching moves:", error);
+      }
+    }
+
+    fetchMoves();
+  }, []);
+
   function getMoveOptions(square: Square): boolean {
+    if (!game) return false;
     const moves = game.moves({ square, verbose: true }) as Move[];
     if (moves.length === 0) {
       setOptionSquares({});
@@ -65,6 +98,7 @@ const ChessGame: React.FC = () => {
   }
 
   function onSquareClick(square: Square) {
+    if (!game) return;
     setRightClickedSquares({});
     if (!moveFrom) {
       if (getMoveOptions(square)) setMoveFrom(square);
@@ -145,24 +179,26 @@ const ChessGame: React.FC = () => {
 
   return (
     <div style={{}}>
-      <Chessboard
-        id="chess"
-        animationDuration={200}
-        arePiecesDraggable={false}
-        position={game.fen()}
-        onSquareClick={onSquareClick}
-        onSquareRightClick={onSquareRightClick}
-        customBoardStyle={{
-          borderRadius: "4px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-        }}
-        customSquareStyles={{
-          ...optionSquares,
-          ...rightClickedSquares,
-        }}
-        promotionToSquare={moveTo}
-        showPromotionDialog={showPromotionDialog}
-      />
+      {game && (
+        <Chessboard
+          id="chess"
+          animationDuration={200}
+          arePiecesDraggable={false}
+          position={game.fen()}
+          onSquareClick={onSquareClick}
+          onSquareRightClick={onSquareRightClick}
+          customBoardStyle={{
+            borderRadius: "4px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+          }}
+          customSquareStyles={{
+            ...optionSquares,
+            ...rightClickedSquares,
+          }}
+          promotionToSquare={moveTo}
+          showPromotionDialog={showPromotionDialog}
+        />
+      )}
       <button
         style={{}}
         onClick={() => {
