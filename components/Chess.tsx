@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
+import { Spinner } from "@material-tailwind/react";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -162,12 +163,11 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div style={{}}>
-      {/* Display whose turn it is */}
+    <div className="flex flex-col justify-center items-center mt-24">
       <h3>
         {game ? (game.turn() === "w" ? "White's Turn" : "Black's Turn") : ""}
       </h3>
-      {game && (
+      {game ? (
         <Chessboard
           id="chess"
           animationDuration={200}
@@ -186,6 +186,10 @@ const ChessGame: React.FC = () => {
           promotionToSquare={moveTo}
           showPromotionDialog={showPromotionDialog}
         />
+      ) : (
+        <div className="flex mx-auto ">
+          <Spinner color="green" />
+        </div>
       )}
     </div>
   );
