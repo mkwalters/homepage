@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 import { Spinner } from "@material-tailwind/react";
+import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -21,15 +22,8 @@ const ChessGame: React.FC = () => {
   const [currentColorToPlay, setCurrentColorToPlay] = useState<
     "w" | "b" | undefined
   >(undefined);
-
-  // function safeGameMutate(modify: (game: Chess) => void) {
-  //   setGame((g) => {
-  //     if (!g) return;
-  //     const update = new Chess(g.fen());
-  //     modify(update);
-  //     return update;
-  //   });
-  // }
+  const [boardOrientation, setBoardOrientation] =
+    useState<BoardOrientation>("white");
 
   // TODO lets properly type this API response
   useEffect(() => {
@@ -49,6 +43,9 @@ const ChessGame: React.FC = () => {
               promotion: move.promotion,
             });
           });
+          setBoardOrientation(
+            data.game.playerColor !== "w" ? "white" : "black"
+          );
 
           // Update the game state
           setMyPiecesColor(data.game.playerColor as "w" | "b");
@@ -111,11 +108,13 @@ const ChessGame: React.FC = () => {
   const onSquareClick = useCallback(
     (square: Square) => {
       if (myPiecesColor === currentColorToPlay) {
-        console.log("Not ready for game or not my turn");
         return;
       }
+
       setRightClickedSquares({});
+
       if (!moveFrom) {
+        // Select the starting square
         if (getMoveOptions(square)) setMoveFrom(square);
         return;
       }
@@ -125,15 +124,15 @@ const ChessGame: React.FC = () => {
           square: moveFrom,
           verbose: true,
         }) as Move[];
+
         const foundMove = moves.find(
           (m) => m.from === moveFrom && m.to === square
         );
+
         if (!foundMove) {
           if (getMoveOptions(square)) setMoveFrom(square);
           return;
         }
-
-        setMoveTo(square);
 
         if (
           (foundMove.color === "w" &&
@@ -143,6 +142,7 @@ const ChessGame: React.FC = () => {
             foundMove.piece === "p" &&
             square[1] === "1")
         ) {
+          setMoveTo(square);
           setShowPromotionDialog(true);
           return;
         }
@@ -152,21 +152,22 @@ const ChessGame: React.FC = () => {
           from: moveFrom,
           to: square,
         });
+
         if (move === null) {
           if (getMoveOptions(square)) setMoveFrom(square);
           return;
         }
 
-        // Send move to API
         sendMoveToApi(moveFrom, square);
 
         setGame(gameCopy);
         setMoveFrom(null);
         setMoveTo(null);
         setOptionSquares({});
+        setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
-    [myPiecesColor, currentColorToPlay]
+    [game, moveFrom, myPiecesColor, currentColorToPlay]
   );
 
   function onSquareRightClick(square: Square) {
@@ -213,6 +214,7 @@ const ChessGame: React.FC = () => {
           }}
           promotionToSquare={moveTo}
           showPromotionDialog={showPromotionDialog}
+          boardOrientation={boardOrientation}
         />
       ) : (
         <div className="flex mx-auto ">
