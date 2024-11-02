@@ -18,6 +18,8 @@ model Game {
   id        Int     @id @default(autoincrement())
   createdAt DateTime @default(now())
   active    Boolean @default(true)
+  playerColor Color  @default(w)   // Indicates the color I play as
+
   moves     Move[]
 }
 
@@ -33,3 +35,8 @@ model Move {
 
   @@unique([gameId, moveNumber]) // Ensures unique move numbers per game
 }
+
+enum Color {
+  w
+  b
+} // chess.js describes the colors like this

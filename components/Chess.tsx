@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 import { Spinner } from "@material-tailwind/react";
@@ -15,6 +15,13 @@ const ChessGame: React.FC = () => {
     {}
   );
   const [optionSquares, setOptionSquares] = useState<SquareStyles>({});
+  const [myPiecesColor, setMyPiecesColor] = useState<"w" | "b" | undefined>(
+    undefined
+  );
+  const [currentColorToPlay, setCurrentColorToPlay] = useState<
+    "w" | "b" | undefined
+  >(undefined);
+  const [readyForGame, setReadyForGame] = useState<boolean>(false);
 
   // function safeGameMutate(modify: (game: Chess) => void) {
   //   setGame((g) => {
@@ -25,17 +32,34 @@ const ChessGame: React.FC = () => {
   //   });
   // }
 
+  const ableToMove = useCallback(
+    (
+      myPiecesColor: "w" | "b" | undefined,
+      currentColorToPlay: "w" | "b" | undefined
+    ) => {
+      if (!myPiecesColor || !currentColorToPlay) return false;
+      return myPiecesColor === currentColorToPlay;
+    },
+    [currentColorToPlay, myPiecesColor]
+  );
+
+  useEffect(() => {
+    setReadyForGame(!!myPiecesColor && !!game);
+  }, [game, myPiecesColor]);
+
+  // TODO lets properly type this API response
   useEffect(() => {
     // Fetch all moves from the API and update the game state
     async function fetchMoves() {
       try {
-        const response = await fetch("/api/move");
+        const response = await fetch("/api/game");
         const data = await response.json();
+        console.log("data:", data);
 
         if (response.ok) {
           // Create a new Chess instance and apply all moves sequentially
           const gameCopy = new Chess();
-          data.moves.forEach((move: Move) => {
+          data.game.moves.forEach((move: Move) => {
             gameCopy.move({
               from: move.from,
               to: move.to,
@@ -44,6 +68,7 @@ const ChessGame: React.FC = () => {
           });
 
           // Update the game state
+          setMyPiecesColor(data.game.color);
           setGame(gameCopy);
         } else {
           console.error("Failed to fetch moves:", data.error);
@@ -100,7 +125,7 @@ const ChessGame: React.FC = () => {
   }
 
   function onSquareClick(square: Square) {
-    if (!game) return;
+    if (!readyForGame || !ableToMove(myPiecesColor, currentColorToPlay)) return;
     setRightClickedSquares({});
     if (!moveFrom) {
       if (getMoveOptions(square)) setMoveFrom(square);
@@ -108,7 +133,7 @@ const ChessGame: React.FC = () => {
     }
 
     if (!moveTo) {
-      const moves = game.moves({ square: moveFrom, verbose: true }) as Move[];
+      const moves = game!.moves({ square: moveFrom, verbose: true }) as Move[];
       const foundMove = moves.find(
         (m) => m.from === moveFrom && m.to === square
       );
@@ -165,7 +190,17 @@ const ChessGame: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-24">
       <h3>
-        {game ? (game.turn() === "w" ? "White's Turn" : "Black's Turn") : ""}
+        {ableToMove(myPiecesColor, currentColorToPlay) ? (
+          <p>
+            Please make a move mnd check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!
+          </p>
+        ) : (
+          <p>
+            It is current my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!
+          </p>
+        )}
       </h3>
       {game ? (
         <Chessboard
