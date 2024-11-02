@@ -25,15 +25,6 @@ const ChessGame: React.FC = () => {
   const [boardOrientation, setBoardOrientation] =
     useState<BoardOrientation>("white");
 
-  // function safeGameMutate(modify: (game: Chess) => void) {
-  //   setGame((g) => {
-  //     if (!g) return;
-  //     const update = new Chess(g.fen());
-  //     modify(update);
-  //     return update;
-  //   });
-  // }
-
   // TODO lets properly type this API response
   useEffect(() => {
     // Fetch all moves from the API and update the game state
@@ -100,7 +91,6 @@ const ChessGame: React.FC = () => {
 
   async function sendMoveToApi(from: Square, to: Square, promotion?: string) {
     try {
-      console.log("Sending move to API:", { from, to, promotion });
       const response = await fetch("/api/move", {
         method: "POST",
         headers: {
@@ -117,16 +107,14 @@ const ChessGame: React.FC = () => {
 
   const onSquareClick = useCallback(
     (square: Square) => {
-      // if (myPiecesColor === currentColorToPlay) {
-      //   console.log("Not ready for game or not my turn");
-      //   return;
-      // }
+      if (myPiecesColor === currentColorToPlay) {
+        return;
+      }
+
       setRightClickedSquares({});
 
-      console.log("Square clicked:", square);
-      console.log("Move from:", moveFrom);
-      console.log("Move to:", moveTo);
       if (!moveFrom) {
+        // Select the starting square
         if (getMoveOptions(square)) setMoveFrom(square);
         return;
       }
@@ -136,16 +124,15 @@ const ChessGame: React.FC = () => {
           square: moveFrom,
           verbose: true,
         }) as Move[];
+
         const foundMove = moves.find(
           (m) => m.from === moveFrom && m.to === square
         );
-        console.log("Found move:", foundMove);
+
         if (!foundMove) {
           if (getMoveOptions(square)) setMoveFrom(square);
           return;
         }
-
-        setMoveTo(square);
 
         if (
           (foundMove.color === "w" &&
@@ -155,6 +142,7 @@ const ChessGame: React.FC = () => {
             foundMove.piece === "p" &&
             square[1] === "1")
         ) {
+          setMoveTo(square);
           setShowPromotionDialog(true);
           return;
         }
@@ -164,12 +152,12 @@ const ChessGame: React.FC = () => {
           from: moveFrom,
           to: square,
         });
+
         if (move === null) {
           if (getMoveOptions(square)) setMoveFrom(square);
           return;
         }
 
-        // Send move to API
         sendMoveToApi(moveFrom, square);
 
         setGame(gameCopy);
@@ -179,7 +167,7 @@ const ChessGame: React.FC = () => {
         setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
-    [myPiecesColor, currentColorToPlay]
+    [game, moveFrom, myPiecesColor, currentColorToPlay]
   );
 
   function onSquareRightClick(square: Square) {
