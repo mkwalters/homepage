@@ -6,7 +6,11 @@ import {
 
 export const Typography = forwardRef<HTMLElement, TypographyProps>(
   ({ children, ...props }, ref) => (
-    <MaterialTypography {...props} ref={ref} className="font-montserrat">
+    <MaterialTypography
+      {...props}
+      ref={ref}
+      className="font-montserrat text-cornsilk"
+    >
       {children}
     </MaterialTypography>
   )

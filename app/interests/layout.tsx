@@ -10,17 +10,17 @@ export default function InterestsLayout({
 }) {
   const router = useRouter();
   return (
-    <div className="p-6">
+    <div className="p-6 w-full ">
       <div className="flex gap-1">
         <button
           onClick={() => {
             router.push("/");
           }}
-          className="bg-green-500 p-2 rounded-full flex gap-1"
+          className="bg-green-500 p-2 rounded-full flex gap-1 items-center"
         >
           {React.createElement(ArrowLeftIcon, {
             strokeWidth: 2,
-            className: " flex h-6 w-4",
+            className: "flex h-4 w-4",
           })}
           <p>Home</p>
         </button>

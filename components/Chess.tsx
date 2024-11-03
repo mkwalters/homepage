@@ -2,8 +2,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
-import { Spinner } from "@material-tailwind/react";
+import { Spinner, Typography } from "@material-tailwind/react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
+import Card from "./TypographyCard";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -182,20 +183,7 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center mt-24">
-      <h3>
-        {myPiecesColor !== currentColorToPlay ? (
-          <p>
-            Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!
-          </p>
-        ) : (
-          <p>
-            It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!
-          </p>
-        )}
-      </h3>
+    <div className="flex flex-col justify-center items-center mt-24 gap-4 ">
       {game ? (
         <Chessboard
           id="chess"
@@ -221,6 +209,18 @@ const ChessGame: React.FC = () => {
           <Spinner color="green" />
         </div>
       )}
+
+      <div className="text-center">
+        <Card>
+          <Typography>
+            {myPiecesColor !== currentColorToPlay
+              ? `Please make a move and check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!`
+              : `It is currently my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!`}
+          </Typography>
+        </Card>
+      </div>
     </div>
   );
 };

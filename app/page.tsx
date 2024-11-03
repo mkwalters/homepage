@@ -1,5 +1,5 @@
 "use client";
-import { NavListMenu } from "@/components/HeaderMenu";
+import { NavMenu } from "@/components/NavMenu";
 import { Typography } from "@/components/Typography";
 import { useCalendlyContext } from "@/context/CalendlyContext";
 import Image from "next/image";
@@ -25,7 +25,7 @@ export default function Home() {
           Hope you have a nice day ✌️
         </Typography>
       </div>
-      <NavListMenu />
+      <NavMenu />
 
       {isCalendlyModalOpen && (
         <div className="App">
