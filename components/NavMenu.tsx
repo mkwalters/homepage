@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
-import { Typography, MenuItem } from "@material-tailwind/react";
+import { MenuItem } from "@material-tailwind/react";
 import {
   SquaresPlusIcon,
   SunIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { Typography } from "./Typography";
 
 const navListMenuItems = [
   {
@@ -41,12 +42,12 @@ const navListMenuItems = [
   },
 ];
 
-export function NavListMenu() {
+export function NavMenu() {
   const router = useRouter();
 
   const renderItems = navListMenuItems.map(({ icon, title, route }, key) => (
     <MenuItem
-      className="flex items-center gap-2 rounded-lg"
+      className="flex items-center gap-2 rounded-lg hover:bg-pakistan-green cursor-pointer"
       onClick={() => {
         router.push(route || "/");
       }}
@@ -59,13 +60,7 @@ export function NavListMenu() {
         })}
       </div>
       <div>
-        <Typography
-          variant="h6"
-          color="blue-gray"
-          className="flex items-center text-sm font-bold text-cornsilk"
-        >
-          {title}
-        </Typography>
+        <Typography>{title}</Typography>
       </div>
     </MenuItem>
   ));
