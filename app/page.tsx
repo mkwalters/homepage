@@ -1,4 +1,6 @@
 "use client";
+import { NavListMenu } from "@/components/HeaderMenu";
+import { Typography } from "@/components/Typography";
 import { useCalendlyContext } from "@/context/CalendlyContext";
 import Image from "next/image";
 import { InlineWidget } from "react-calendly";
@@ -6,7 +8,7 @@ import { InlineWidget } from "react-calendly";
 export default function Home() {
   const { isCalendlyModalOpen } = useCalendlyContext();
   return (
-    <div className="flex flex-col w-screen">
+    <div className="flex flex-col items-center justify-center gap-5">
       <Image
         aria-hidden
         src="/headshot.jpeg"
@@ -14,8 +16,16 @@ export default function Home() {
         width={400}
         height={400}
         priority
-        className="mx-auto"
+        className="mx-auto rounded-xl"
       />
+      <div className="flex max-w-80 bg-dark-moss-green p-2 rounded-xl">
+        <Typography>
+          Hi, I&apos;m Mitchell Walters. Thanks for taking the time to visit my
+          page. I have some fun links below to help you get to know me better.
+          Hope you have a nice day ✌️
+        </Typography>
+      </div>
+      <NavListMenu />
 
       {isCalendlyModalOpen && (
         <div className="App">

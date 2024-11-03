@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { HeaderMenu } from "@/components/HeaderMenu";
 import { CalendlyProvider } from "@/context/CalendlyContext";
 
 const geistSans = localFont({
@@ -31,9 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CalendlyProvider>
-          <HeaderMenu />
-
-          {children}
+          <div className="flex w-screen h-screen bg-pakistan-green justify-center">
+            {children}
+          </div>
         </CalendlyProvider>
       </body>
     </html>
