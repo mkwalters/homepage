@@ -185,42 +185,49 @@ const ChessGame: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-24 gap-4 ">
       {game ? (
-        <Chessboard
-          id="chess"
-          animationDuration={200}
-          arePiecesDraggable={false}
-          position={game.fen()}
-          onSquareClick={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
-          customBoardStyle={{
-            borderRadius: "4px",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-          }}
-          customSquareStyles={{
-            ...optionSquares,
-            ...rightClickedSquares,
-          }}
-          promotionToSquare={moveTo}
-          showPromotionDialog={showPromotionDialog}
-          boardOrientation={boardOrientation}
-        />
+        <div className="flex  flex-col w-full h-full gap-4">
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Walters</Typography>
+          </Card>
+          <Chessboard
+            id="chess"
+            animationDuration={200}
+            arePiecesDraggable={false}
+            position={game.fen()}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
+            customBoardStyle={{
+              borderRadius: "4px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+            }}
+            customSquareStyles={{
+              ...optionSquares,
+              ...rightClickedSquares,
+            }}
+            promotionToSquare={moveTo}
+            showPromotionDialog={showPromotionDialog}
+            boardOrientation={boardOrientation}
+          />
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Internet</Typography>
+          </Card>
+          <div className="text-center">
+            <Card>
+              <Typography>
+                {myPiecesColor !== currentColorToPlay
+                  ? `Please make a move and check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!`
+                  : `It is currently my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!`}
+              </Typography>
+            </Card>
+          </div>
+        </div>
       ) : (
         <div className="flex mx-auto ">
           <Spinner color="green" />
         </div>
       )}
-
-      <div className="text-center">
-        <Card>
-          <Typography>
-            {myPiecesColor !== currentColorToPlay
-              ? `Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!`
-              : `It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!`}
-          </Typography>
-        </Card>
-      </div>
     </div>
   );
 };
