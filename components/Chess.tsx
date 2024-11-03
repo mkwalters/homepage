@@ -167,7 +167,7 @@ const ChessGame: React.FC = () => {
         setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
-    [game, moveFrom, myPiecesColor, currentColorToPlay]
+    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay, getMoveOptions]
   );
 
   function onSquareRightClick(square: Square) {

@@ -20,9 +20,9 @@ export default function Home() {
       />
       <div className="flex max-w-80 bg-dark-moss-green p-2 rounded-xl">
         <Typography>
-          Hi, I'm Mitchell Walters. Thanks for taking the time to visit my page.
-          I have some fun links below to help you get to know me better. Hope
-          you have a nice day ✌️
+          Hi, I&apos;m Mitchell Walters. Thanks for taking the time to visit my
+          page. I have some fun links below to help you get to know me better.
+          Hope you have a nice day ✌️
         </Typography>
       </div>
       <NavListMenu />
