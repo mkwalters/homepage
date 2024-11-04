@@ -7,6 +7,7 @@ import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
 import { Icon } from "./Icon";
 import React from "react";
+import { stringify } from "querystring";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -39,6 +40,7 @@ const ChessGame: React.FC = () => {
         if (response.ok) {
           // Create a new Chess instance and apply all moves sequentially
           const gameCopy = new Chess();
+          console.log(`game copy first ${gameCopy.moves()}`);
           data.game.moves.forEach((move: Move) => {
             gameCopy.move({
               from: move.from,
@@ -49,6 +51,8 @@ const ChessGame: React.FC = () => {
           setBoardOrientation(
             data.game.playerColor !== "w" ? "white" : "black"
           );
+
+          console.log(`game copy ${gameCopy.history()}`);
 
           // Update the game state
           setMyPiecesColor(data.game.playerColor as "w" | "b");
@@ -185,7 +189,7 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row bg-purple-400 gap-8">
+    <div className="flex flex-row gap-8 bg-blue-500">
       <div className="flex flex-col justify-center items-center gap-4 ">
         {game ? (
           <div className="flex  flex-col w-full h-full gap-4">
@@ -232,10 +236,10 @@ const ChessGame: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="flex w-96  bg-yellow-600">
-        <div className="grid grid-cols-3 gap-x-2 w-96 bg-yellow-600 p-4">
-          <div className="flex flex-col w-96 bg-yellow-600 p-4">
-            {game?.moves().map((move, index, movesArray) => {
+      <Card>
+        <div className="grid grid-cols-3 gap-x-7  ">
+          <div className="flex flex-col w-96">
+            {game?.history().map((move, index, movesArray) => {
               // Only process every second move (index % 2 === 0) to display both White and Black moves together
               if (index % 2 === 0) {
                 const moveNumber = Math.floor(index / 2) + 1;
@@ -252,7 +256,7 @@ const ChessGame: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
