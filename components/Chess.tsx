@@ -5,6 +5,8 @@ import { Chess, Square, Move } from "chess.js";
 import { Spinner, Typography } from "@material-tailwind/react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
+import React from "react";
+import { ChessScoreboard } from "./ChessScoreboard";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -26,6 +28,10 @@ const ChessGame: React.FC = () => {
   const [boardOrientation, setBoardOrientation] =
     useState<BoardOrientation>("white");
 
+  const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<
+    number | undefined
+  >(0);
+
   // TODO lets properly type this API response
   useEffect(() => {
     // Fetch all moves from the API and update the game state
@@ -37,6 +43,7 @@ const ChessGame: React.FC = () => {
         if (response.ok) {
           // Create a new Chess instance and apply all moves sequentially
           const gameCopy = new Chess();
+          console.log(`game copy first ${gameCopy.moves()}`);
           data.game.moves.forEach((move: Move) => {
             gameCopy.move({
               from: move.from,
@@ -48,9 +55,12 @@ const ChessGame: React.FC = () => {
             data.game.playerColor !== "w" ? "white" : "black"
           );
 
+          console.log(`game copy ${gameCopy.history()}`);
+
           // Update the game state
           setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
+          setViewCurrentMoveNumber(data.game.moves.length - 1);
           setGame(gameCopy);
         } else {
           console.error("Failed to fetch moves:", data.error);
@@ -168,7 +178,7 @@ const ChessGame: React.FC = () => {
         setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
-    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay, getMoveOptions]
+    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay]
   );
 
   function onSquareRightClick(square: Square) {
@@ -182,45 +192,62 @@ const ChessGame: React.FC = () => {
     }));
   }
 
-  return (
-    <div className="flex flex-col justify-center items-center mt-24 gap-4 ">
-      {game ? (
-        <Chessboard
-          id="chess"
-          animationDuration={200}
-          arePiecesDraggable={false}
-          position={game.fen()}
-          onSquareClick={onSquareClick}
-          onSquareRightClick={onSquareRightClick}
-          customBoardStyle={{
-            borderRadius: "4px",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-          }}
-          customSquareStyles={{
-            ...optionSquares,
-            ...rightClickedSquares,
-          }}
-          promotionToSquare={moveTo}
-          showPromotionDialog={showPromotionDialog}
-          boardOrientation={boardOrientation}
-        />
-      ) : (
-        <div className="flex mx-auto ">
-          <Spinner color="green" />
-        </div>
-      )}
-
-      <div className="text-center">
-        <Card>
-          <Typography>
-            {myPiecesColor !== currentColorToPlay
-              ? `Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!`
-              : `It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!`}
-          </Typography>
-        </Card>
+  if (!game) {
+    return (
+      <div className="flex mx-auto ">
+        <Spinner color="green" />
       </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-row gap-8 ">
+      <div className="flex flex-col justify-center items-center gap-4 ">
+        <div className="flex  flex-col w-full h-full gap-4">
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Walters</Typography>
+          </Card>
+          <Chessboard
+            id="chess"
+            animationDuration={200}
+            arePiecesDraggable={false}
+            position={game.fen()}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
+            customBoardStyle={{
+              borderRadius: "4px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+            }}
+            customSquareStyles={{
+              ...optionSquares,
+              ...rightClickedSquares,
+            }}
+            promotionToSquare={moveTo}
+            showPromotionDialog={showPromotionDialog}
+            boardOrientation={boardOrientation}
+          />
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Internet</Typography>
+          </Card>
+          <div className="text-center">
+            <Card>
+              <Typography>
+                {myPiecesColor !== currentColorToPlay
+                  ? `Please make a move and check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!`
+                  : `It is currently my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!`}
+              </Typography>
+            </Card>
+          </div>
+        </div>
+      </div>
+      <Card styles="p-4">
+        <ChessScoreboard
+          game={game}
+          viewCurrentMoveNumber={viewCurrentMoveNumber}
+        />
+      </Card>
     </div>
   );
 };

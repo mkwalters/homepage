@@ -1,43 +1,46 @@
 "use client";
 import React from "react";
 import { MenuItem } from "@material-tailwind/react";
-import {
-  SquaresPlusIcon,
-  SunIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/solid";
+
 import { useRouter } from "next/navigation";
 import { Typography } from "./Typography";
+import { Icon } from "./Icon";
 
 const navListMenuItems = [
   {
     title: "Chess",
     description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
+    icon: "chess_pawn",
     route: "interests/chess",
   },
   {
     title: "Puzzles",
     description: "Find the perfect solution for your needs.",
-    icon: SquaresPlusIcon,
+    icon: "toys_and_games",
     route: "",
   },
   {
     title: "Pets",
     description: "Meet and learn about our dedication",
-    icon: UserGroupIcon,
+    icon: "pets",
     route: "interests/pets",
   },
   {
-    title: "My Music",
+    title: "Music",
     description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
+    icon: "music_note",
     route: "interests/pets",
   },
   {
-    title: "Gardening",
+    title: "Flowers",
     description: "Learn how we can help you achieve your goals.",
-    icon: SunIcon,
+    icon: "deceased",
+    route: "interests/pets",
+  },
+  {
+    title: "Books",
+    description: "Learn how we can help you achieve your goals.",
+    icon: "book_2",
     route: "interests/pets",
   },
 ];
@@ -54,10 +57,7 @@ export function NavMenu() {
       key={key}
     >
       <div className="flex items-center justify-center bg-blue-gray-50 p-1  rounded-lg">
-        {React.createElement(icon, {
-          strokeWidth: 2,
-          className: "h-6 text-earth-yellow w-6",
-        })}
+        <Icon iconName={icon} styles={"text-pakistan-green"} />
       </div>
       <div>
         <Typography>{title}</Typography>

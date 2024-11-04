@@ -16,7 +16,7 @@ export default function InterestsLayout({
           onClick={() => {
             router.push("/");
           }}
-          className="bg-green-500 p-2 rounded-full flex gap-1 items-center"
+          className="bg-pakistan-green p-2 rounded-full flex gap-1 items-center"
         >
           {React.createElement(ArrowLeftIcon, {
             strokeWidth: 2,
