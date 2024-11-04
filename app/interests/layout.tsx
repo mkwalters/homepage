@@ -10,7 +10,7 @@ export default function InterestsLayout({
 }) {
   const router = useRouter();
   return (
-    <div className="p-6 w-full ">
+    <div className="p-6 w-full">
       <div className="flex gap-1">
         <button
           onClick={() => {

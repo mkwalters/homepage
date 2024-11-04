@@ -22,7 +22,7 @@ export default function RootLayout({
       </head>
       <body>
         <CalendlyProvider>
-          <div className="flex w-screen h-screen bg-pakistan-green justify-center">
+          <div className="flex w-full min-h-screen  h-full bg-pakistan-green justify-center">
             {children}
           </div>
         </CalendlyProvider>
