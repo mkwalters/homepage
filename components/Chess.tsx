@@ -8,6 +8,7 @@ import Card from "./TypographyCard";
 import { Icon } from "./Icon";
 import React from "react";
 import { stringify } from "querystring";
+import { ChessScoreboard } from "./ChessScoreboard";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -28,6 +29,10 @@ const ChessGame: React.FC = () => {
   >(undefined);
   const [boardOrientation, setBoardOrientation] =
     useState<BoardOrientation>("white");
+
+  const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<
+    number | undefined
+  >(0);
 
   // TODO lets properly type this API response
   useEffect(() => {
@@ -57,6 +62,7 @@ const ChessGame: React.FC = () => {
           // Update the game state
           setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
+          setViewCurrentMoveNumber(data.game.moves.length - 1);
           setGame(gameCopy);
         } else {
           console.error("Failed to fetch moves:", data.error);
@@ -188,74 +194,61 @@ const ChessGame: React.FC = () => {
     }));
   }
 
-  return (
-    <div className="flex flex-row gap-8 bg-blue-500">
-      <div className="flex flex-col justify-center items-center gap-4 ">
-        {game ? (
-          <div className="flex  flex-col w-full h-full gap-4">
-            <Card styles="mx-auto">
-              <Typography className="mx-auto flex">Walters</Typography>
-            </Card>
-            <Chessboard
-              id="chess"
-              animationDuration={200}
-              arePiecesDraggable={false}
-              position={game.fen()}
-              onSquareClick={onSquareClick}
-              onSquareRightClick={onSquareRightClick}
-              customBoardStyle={{
-                borderRadius: "4px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-              }}
-              customSquareStyles={{
-                ...optionSquares,
-                ...rightClickedSquares,
-              }}
-              promotionToSquare={moveTo}
-              showPromotionDialog={showPromotionDialog}
-              boardOrientation={boardOrientation}
-            />
-            <Card styles="mx-auto">
-              <Typography className="mx-auto flex">Internet</Typography>
-            </Card>
-            <div className="text-center">
-              <Card>
-                <Typography>
-                  {myPiecesColor !== currentColorToPlay
-                    ? `Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!`
-                    : `It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!`}
-                </Typography>
-              </Card>
-            </div>
-          </div>
-        ) : (
-          <div className="flex mx-auto ">
-            <Spinner color="green" />
-          </div>
-        )}
+  if (!game) {
+    return (
+      <div className="flex mx-auto ">
+        <Spinner color="green" />
       </div>
-      <Card>
-        <div className="grid grid-cols-3 gap-x-7  ">
-          <div className="flex flex-col w-96">
-            {game?.history().map((move, index, movesArray) => {
-              // Only process every second move (index % 2 === 0) to display both White and Black moves together
-              if (index % 2 === 0) {
-                const moveNumber = Math.floor(index / 2) + 1;
-                const whiteMove = move;
-                const blackMove = movesArray[index + 1] || ""; // Get Black's move if it exists, otherwise leave empty
+    );
+  }
 
-                return (
-                  <p key={index}>
-                    {`${moveNumber}. ${whiteMove} ${blackMove}`}
-                  </p>
-                );
-              }
-              return null; // Skip odd indices to avoid duplication
-            })}
+  return (
+    <div className="flex flex-row gap-8 ">
+      <div className="flex flex-col justify-center items-center gap-4 ">
+        <div className="flex  flex-col w-full h-full gap-4">
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Walters</Typography>
+          </Card>
+          <Chessboard
+            id="chess"
+            animationDuration={200}
+            arePiecesDraggable={false}
+            position={game.fen()}
+            onSquareClick={onSquareClick}
+            onSquareRightClick={onSquareRightClick}
+            customBoardStyle={{
+              borderRadius: "4px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+            }}
+            customSquareStyles={{
+              ...optionSquares,
+              ...rightClickedSquares,
+            }}
+            promotionToSquare={moveTo}
+            showPromotionDialog={showPromotionDialog}
+            boardOrientation={boardOrientation}
+          />
+          <Card styles="mx-auto">
+            <Typography className="mx-auto flex">Internet</Typography>
+          </Card>
+          <div className="text-center">
+            <Card>
+              <Typography>
+                {myPiecesColor !== currentColorToPlay
+                  ? `Please make a move and check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!`
+                  : `It is currently my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!`}
+              </Typography>
+            </Card>
           </div>
         </div>
+      </div>
+      <Card styles="p-4">
+        <ChessScoreboard
+          game={game}
+          viewCurrentMoveNumber={viewCurrentMoveNumber}
+        />
       </Card>
     </div>
   );
