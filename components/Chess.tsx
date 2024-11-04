@@ -6,6 +6,7 @@ import { Spinner, Typography } from "@material-tailwind/react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
 import { Icon } from "./Icon";
+import React from "react";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -184,51 +185,74 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center mt-24 gap-4 ">
-      {game ? (
-        <div className="flex  flex-col w-full h-full gap-4">
-          <Card styles="mx-auto">
-            <Typography className="mx-auto flex">Walters</Typography>
-          </Card>
-          <Chessboard
-            id="chess"
-            animationDuration={200}
-            arePiecesDraggable={false}
-            position={game.fen()}
-            onSquareClick={onSquareClick}
-            onSquareRightClick={onSquareRightClick}
-            customBoardStyle={{
-              borderRadius: "4px",
-              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-            }}
-            customSquareStyles={{
-              ...optionSquares,
-              ...rightClickedSquares,
-            }}
-            promotionToSquare={moveTo}
-            showPromotionDialog={showPromotionDialog}
-            boardOrientation={boardOrientation}
-          />
-          <Card styles="mx-auto">
-            <Typography className="mx-auto flex">Internet</Typography>
-          </Card>
-          <div className="text-center">
-            <Card>
-              <Typography>
-                {myPiecesColor !== currentColorToPlay
-                  ? `Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!`
-                  : `It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!`}
-              </Typography>
+    <div className="flex flex-row bg-purple-400 gap-8">
+      <div className="flex flex-col justify-center items-center gap-4 ">
+        {game ? (
+          <div className="flex  flex-col w-full h-full gap-4">
+            <Card styles="mx-auto">
+              <Typography className="mx-auto flex">Walters</Typography>
             </Card>
+            <Chessboard
+              id="chess"
+              animationDuration={200}
+              arePiecesDraggable={false}
+              position={game.fen()}
+              onSquareClick={onSquareClick}
+              onSquareRightClick={onSquareRightClick}
+              customBoardStyle={{
+                borderRadius: "4px",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+              }}
+              customSquareStyles={{
+                ...optionSquares,
+                ...rightClickedSquares,
+              }}
+              promotionToSquare={moveTo}
+              showPromotionDialog={showPromotionDialog}
+              boardOrientation={boardOrientation}
+            />
+            <Card styles="mx-auto">
+              <Typography className="mx-auto flex">Internet</Typography>
+            </Card>
+            <div className="text-center">
+              <Card>
+                <Typography>
+                  {myPiecesColor !== currentColorToPlay
+                    ? `Please make a move and check back later. I try to play my moves
+            within 24 hours. Thanks and good luck!`
+                    : `It is currently my turn to play so please check back later. I try to
+            make my moves within 24 hours. Thanks!`}
+                </Typography>
+              </Card>
+            </div>
+          </div>
+        ) : (
+          <div className="flex mx-auto ">
+            <Spinner color="green" />
+          </div>
+        )}
+      </div>
+      <div className="flex w-96  bg-yellow-600">
+        <div className="grid grid-cols-3 gap-x-2 w-96 bg-yellow-600 p-4">
+          <div className="flex flex-col w-96 bg-yellow-600 p-4">
+            {game?.moves().map((move, index, movesArray) => {
+              // Only process every second move (index % 2 === 0) to display both White and Black moves together
+              if (index % 2 === 0) {
+                const moveNumber = Math.floor(index / 2) + 1;
+                const whiteMove = move;
+                const blackMove = movesArray[index + 1] || ""; // Get Black's move if it exists, otherwise leave empty
+
+                return (
+                  <p key={index}>
+                    {`${moveNumber}. ${whiteMove} ${blackMove}`}
+                  </p>
+                );
+              }
+              return null; // Skip odd indices to avoid duplication
+            })}
           </div>
         </div>
-      ) : (
-        <div className="flex mx-auto ">
-          <Spinner color="green" />
-        </div>
-      )}
+      </div>
     </div>
   );
 };
