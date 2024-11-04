@@ -5,6 +5,7 @@ import { Chess, Square, Move } from "chess.js";
 import { Spinner, Typography } from "@material-tailwind/react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
+import { Icon } from "./Icon";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
