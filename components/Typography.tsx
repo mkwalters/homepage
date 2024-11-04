@@ -4,12 +4,16 @@ import {
   TypographyProps,
 } from "@material-tailwind/react";
 
-export const Typography = forwardRef<HTMLElement, TypographyProps>(
-  ({ children, ...props }, ref) => (
+interface CustomTypographyProps extends TypographyProps {
+  styles?: string;
+}
+
+export const Typography = forwardRef<HTMLElement, CustomTypographyProps>(
+  ({ children, styles = "", ...props }, ref) => (
     <MaterialTypography
       {...props}
       ref={ref}
-      className="font-montserrat text-cornsilk"
+      className={`font-montserrat text-cornsilk ${styles}`}
     >
       {children}
     </MaterialTypography>

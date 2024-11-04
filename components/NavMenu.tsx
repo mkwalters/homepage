@@ -29,7 +29,7 @@ const navListMenuItems = [
     title: "Music",
     description: "Learn how we can help you achieve your goals.",
     icon: "music_note",
-    route: "interests/pets",
+    route: "interests/music",
   },
   {
     title: "Flowers",
