@@ -12,6 +12,9 @@ type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
   const [game, setGame] = useState<Chess | undefined>(undefined);
+  const [gameToDisplay, setGameToDisplay] = useState<Chess | undefined>(
+    undefined
+  );
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [moveTo, setMoveTo] = useState<Square | null>(null);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
@@ -30,7 +33,20 @@ const ChessGame: React.FC = () => {
 
   const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<
     number | undefined
-  >(0);
+  >(undefined);
+  const [moveHistory, setMoveHistory] = useState<Move[]>([]);
+
+  useEffect(() => {
+    if (game && typeof viewCurrentMoveNumber === "number") {
+      // Create a fresh instance to hold the moves up to the desired move number
+      const newGameToDisplay = new Chess();
+      // Apply only the moves up to viewCurrentMoveNumber
+      moveHistory.slice(0, viewCurrentMoveNumber + 1).forEach((move) => {
+        newGameToDisplay.move(move);
+      });
+      setGameToDisplay(newGameToDisplay);
+    }
+  }, [game, moveHistory, viewCurrentMoveNumber]);
 
   // TODO lets properly type this API response
   useEffect(() => {
@@ -43,7 +59,6 @@ const ChessGame: React.FC = () => {
         if (response.ok) {
           // Create a new Chess instance and apply all moves sequentially
           const gameCopy = new Chess();
-          console.log(`game copy first ${gameCopy.moves()}`);
           data.game.moves.forEach((move: Move) => {
             gameCopy.move({
               from: move.from,
@@ -54,6 +69,7 @@ const ChessGame: React.FC = () => {
           setBoardOrientation(
             data.game.playerColor !== "w" ? "white" : "black"
           );
+          setMoveHistory(data.game.moves as Move[]);
 
           console.log(`game copy ${gameCopy.history()}`);
 
@@ -192,7 +208,7 @@ const ChessGame: React.FC = () => {
     }));
   }
 
-  if (!game) {
+  if (!gameToDisplay) {
     return (
       <div className="flex mx-auto ">
         <Spinner color="green" />
@@ -211,7 +227,7 @@ const ChessGame: React.FC = () => {
             id="chess"
             animationDuration={200}
             arePiecesDraggable={false}
-            position={game.fen()}
+            position={gameToDisplay.fen()}
             onSquareClick={onSquareClick}
             onSquareRightClick={onSquareRightClick}
             customBoardStyle={{
@@ -246,6 +262,8 @@ const ChessGame: React.FC = () => {
         <ChessScoreboard
           game={game}
           viewCurrentMoveNumber={viewCurrentMoveNumber}
+          setViewCurrentMoveNumber={setViewCurrentMoveNumber}
+          numberOfMoves={game?.history().length || 0}
         />
       </Card>
     </div>
