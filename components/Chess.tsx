@@ -5,9 +5,7 @@ import { Chess, Square, Move } from "chess.js";
 import { Spinner, Typography } from "@material-tailwind/react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
-import { Icon } from "./Icon";
 import React from "react";
-import { stringify } from "querystring";
 import { ChessScoreboard } from "./ChessScoreboard";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
@@ -180,7 +178,7 @@ const ChessGame: React.FC = () => {
         setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
       }
     },
-    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay, getMoveOptions]
+    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay]
   );
 
   function onSquareRightClick(square: Square) {
