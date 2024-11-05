@@ -118,7 +118,7 @@ const ChessGame: React.FC = () => {
   }
 
   const onSquareClick = (square: Square) => {
-    if (currentColorToPlay === myPiecesColor) return;
+    // if (currentColorToPlay === myPiecesColor) return;
     setRightClickedSquares({});
 
     if (!moveFrom) {
@@ -200,9 +200,9 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row gap-12">
+    <div className="flex flex-row gap-12  max-w-4xl">
       <div className="flex flex-col justify-center items-center gap-4">
-        <div className="flex flex-col w-full h-full gap-4">
+        <div className="flex flex-col w-full h-full gap-4 ">
           <Card styles="mx-auto">
             <Typography className="mx-auto flex">Walters</Typography>
           </Card>

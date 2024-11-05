@@ -9,7 +9,7 @@ const Music = () => {
       <Card styles="p-6">
         <div className="flex flex-col mx-auto gap-6 items-center">
           <Typography styles="text-center max-w-96">
-            I recorded the following videos during Fall 2020. I play the lead
+            I recorded the following videos during Fall 2020. I play lead
             electric guitar on some of my favorite songs.
           </Typography>
 
