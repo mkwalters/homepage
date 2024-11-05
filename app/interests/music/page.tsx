@@ -3,11 +3,13 @@ import React from "react";
 import Card from "@/components/TypographyCard";
 import { Typography } from "@/components/Typography";
 import Image from "next/image";
+import { usePsychadelicBackgroundContext } from "@/context/PsychadelicBackgroundContext";
 
 const Music = () => {
+  const { toggleIsPsychadelic } = usePsychadelicBackgroundContext();
   return (
     <div className="flex justify-center">
-      <Card styles="p-6">
+      <Card styles={`p-6 `}>
         <div className="flex flex-col mx-auto gap-6 items-center">
           <Typography styles="text-center max-w-96">
             I recorded the following videos during Fall 2020. I play lead
@@ -36,19 +38,22 @@ const Music = () => {
           ))}
         </div>
       </Card>
+
       <Image
         src="/ledZeppelin.jpg"
-        alt="Lead Guitar"
+        alt="Led Zeppelin Icon"
         width={130}
         height={130}
-        className="fixed bottom-8 right-8 rounded-md object-cover"
+        className="fixed bottom-8 right-8 rounded-md object-cover cursor-pointer"
+        onClick={toggleIsPsychadelic}
       />
       <Image
         src="/gratefulDead.jpg"
-        alt="Lead Guitar"
+        alt="Grateful Dead Icon"
         width={130}
         height={130}
-        className="fixed bottom-8 left-8 rounded-md object-cover"
+        className="fixed bottom-8 left-8 rounded-md object-cover cursor-pointer"
+        onClick={toggleIsPsychadelic}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CalendlyProvider } from "@/context/CalendlyContext";
+import { PsychadelicBackgroundProvider } from "@/context/PsychadelicBackgroundContext";
 
 export const metadata: Metadata = {
   title: "😸😸😸😸😸😸😸😸😸😸😸",
@@ -22,9 +23,11 @@ export default function RootLayout({
       </head>
       <body>
         <CalendlyProvider>
-          <div className="flex w-full min-h-screen  h-full bg-pakistan-green justify-center">
-            {children}
-          </div>
+          <PsychadelicBackgroundProvider>
+            <div className="flex w-full min-h-screen  h-full bg-pakistan-green justify-center">
+              {children}
+            </div>
+          </PsychadelicBackgroundProvider>
         </CalendlyProvider>
       </body>
     </html>

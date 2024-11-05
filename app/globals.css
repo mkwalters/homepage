@@ -16,8 +16,32 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.psychedelic-light-show {
+  background: radial-gradient(circle, #ff00ff, #00ffff, #ff0000, #00ff00);
+  background-size: 200% 200%;
+  animation: psychedelic-animation 10s infinite linear;
+}
+
+@keyframes psychedelic-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes psychedelic-light-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
