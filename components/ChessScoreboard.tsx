@@ -4,8 +4,8 @@ import { Icon } from "./Icon";
 
 type ChessScoreboardProps = {
   game: Chess | undefined;
-  viewCurrentMoveNumber: number | undefined;
-  setViewCurrentMoveNumber: Dispatch<SetStateAction<number | undefined>>;
+  viewCurrentMoveNumber: number;
+  setViewCurrentMoveNumber: Dispatch<SetStateAction<number>>;
   numberOfMoves: number;
 };
 
@@ -15,6 +15,8 @@ export const ChessScoreboard = ({
   setViewCurrentMoveNumber,
   numberOfMoves,
 }: ChessScoreboardProps) => {
+  // Ensure viewCurrentMoveNumber is within bounds
+
   return (
     <div className="flex flex-col gap-2 justify-between">
       <div>
@@ -56,22 +58,34 @@ export const ChessScoreboard = ({
       </div>
 
       <div className="flex flex-row">
-        <div onClick={() => setViewCurrentMoveNumber(0)}>
+        <div
+          onClick={() => {
+            setViewCurrentMoveNumber(0);
+          }}
+        >
           <Icon iconName="first_page"></Icon>
         </div>
         <div
-          onClick={() => setViewCurrentMoveNumber((prev) => (prev ?? 0) - 1)}
+          onClick={() => {
+            setViewCurrentMoveNumber(viewCurrentMoveNumber - 1);
+          }}
         >
           <Icon iconName="chevron_backward"></Icon>
         </div>
 
         <div
-          onClick={() => setViewCurrentMoveNumber((prev) => (prev ?? 0) + 1)}
+          onClick={() => {
+            setViewCurrentMoveNumber(viewCurrentMoveNumber + 1);
+          }}
         >
           <Icon iconName="chevron_forward"></Icon>
         </div>
 
-        <div onClick={() => setViewCurrentMoveNumber(numberOfMoves - 1)}>
+        <div
+          onClick={() => {
+            setViewCurrentMoveNumber(numberOfMoves - 1);
+          }}
+        >
           <Icon iconName="last_page"></Icon>
         </div>
       </div>

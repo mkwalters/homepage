@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess, Square, Move } from "chess.js";
 import { Spinner, Typography } from "@material-tailwind/react";
@@ -11,10 +11,8 @@ import { ChessScoreboard } from "./ChessScoreboard";
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
 const ChessGame: React.FC = () => {
-  const [game, setGame] = useState<Chess | undefined>(undefined);
-  const [gameToDisplay, setGameToDisplay] = useState<Chess | undefined>(
-    undefined
-  );
+  const [game, setGame] = useState<Chess>(new Chess());
+  const [gameToDisplay, setGameToDisplay] = useState<Chess>(new Chess());
   const [moveFrom, setMoveFrom] = useState<Square | null>(null);
   const [moveTo, setMoveTo] = useState<Square | null>(null);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
@@ -22,33 +20,24 @@ const ChessGame: React.FC = () => {
     {}
   );
   const [optionSquares, setOptionSquares] = useState<SquareStyles>({});
-  const [myPiecesColor, setMyPiecesColor] = useState<"w" | "b" | undefined>(
-    undefined
-  );
-  const [currentColorToPlay, setCurrentColorToPlay] = useState<
-    "w" | "b" | undefined
-  >(undefined);
+  const [myPiecesColor, setMyPiecesColor] = useState<"w" | "b">("w");
+  const [currentColorToPlay, setCurrentColorToPlay] = useState<"w" | "b">("w");
   const [boardOrientation, setBoardOrientation] =
     useState<BoardOrientation>("white");
 
-  const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<
-    number | undefined
-  >(undefined);
+  const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<number>(0);
   const [moveHistory, setMoveHistory] = useState<Move[]>([]);
 
   useEffect(() => {
-    if (game && typeof viewCurrentMoveNumber === "number") {
-      // Create a fresh instance to hold the moves up to the desired move number
-      const newGameToDisplay = new Chess();
-      // Apply only the moves up to viewCurrentMoveNumber
-      moveHistory.slice(0, viewCurrentMoveNumber + 1).forEach((move) => {
-        newGameToDisplay.move(move);
-      });
-      setGameToDisplay(newGameToDisplay);
-    }
-  }, [game, moveHistory, viewCurrentMoveNumber]);
+    const updatedGameToDisplay = new Chess();
+    moveHistory.forEach((move, index) => {
+      if (index <= viewCurrentMoveNumber) {
+        updatedGameToDisplay.move(move);
+      }
+    });
+    setGameToDisplay(updatedGameToDisplay);
+  }, [moveHistory, viewCurrentMoveNumber]);
 
-  // TODO lets properly type this API response
   useEffect(() => {
     // Fetch all moves from the API and update the game state
     async function fetchMoves() {
@@ -57,27 +46,23 @@ const ChessGame: React.FC = () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Create a new Chess instance and apply all moves sequentially
-          const gameCopy = new Chess();
+          const fetchedGame = new Chess();
           data.game.moves.forEach((move: Move) => {
-            gameCopy.move({
+            fetchedGame.move({
               from: move.from,
               to: move.to,
               promotion: move.promotion,
             });
           });
+
           setBoardOrientation(
             data.game.playerColor !== "w" ? "white" : "black"
           );
-          setMoveHistory(data.game.moves as Move[]);
-
-          console.log(`game copy ${gameCopy.history()}`);
-
-          // Update the game state
+          setMoveHistory(data?.game?.moves || []);
           setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
           setViewCurrentMoveNumber(data.game.moves.length - 1);
-          setGame(gameCopy);
+          setGame(fetchedGame);
         } else {
           console.error("Failed to fetch moves:", data.error);
         }
@@ -132,70 +117,68 @@ const ChessGame: React.FC = () => {
     }
   }
 
-  const onSquareClick = useCallback(
-    (square: Square) => {
-      if (myPiecesColor === currentColorToPlay) {
-        return;
-      }
+  const onSquareClick = (square: Square) => {
+    if (currentColorToPlay === myPiecesColor) return;
+    setRightClickedSquares({});
 
-      setRightClickedSquares({});
+    if (!moveFrom) {
+      if (getMoveOptions(square)) setMoveFrom(square);
+      return;
+    }
 
-      if (!moveFrom) {
-        // Select the starting square
+    const moves = game.moves({ square: moveFrom, verbose: true }) as Move[];
+    const foundMove = moves.find((m) => m.from === moveFrom && m.to === square);
+
+    if (!foundMove) {
+      if (getMoveOptions(square)) setMoveFrom(square);
+      return;
+    }
+
+    if (
+      (foundMove.color === "w" &&
+        foundMove.piece === "p" &&
+        square[1] === "8") ||
+      (foundMove.color === "b" && foundMove.piece === "p" && square[1] === "1")
+    ) {
+      setMoveTo(square);
+      setShowPromotionDialog(true);
+      return;
+    }
+    const gameCopy = new Chess();
+    game.history({ verbose: true }).forEach((move) => {
+      gameCopy.move(move);
+    });
+
+    const move = gameCopy.move({
+      from: moveFrom,
+      to: square,
+    });
+    setMoveHistory((prevHistory) => [...prevHistory, move]);
+    setGame((prevGame) => {
+      const gameCopy = new Chess();
+      prevGame.history({ verbose: true }).forEach((move) => {
+        gameCopy.move(move);
+      });
+
+      const move = gameCopy.move({
+        from: moveFrom,
+        to: square,
+      });
+      if (move === null) {
         if (getMoveOptions(square)) setMoveFrom(square);
-        return;
+        return prevGame;
       }
 
-      if (!moveTo) {
-        const moves = game!.moves({
-          square: moveFrom,
-          verbose: true,
-        }) as Move[];
+      return gameCopy;
+    });
 
-        const foundMove = moves.find(
-          (m) => m.from === moveFrom && m.to === square
-        );
-
-        if (!foundMove) {
-          if (getMoveOptions(square)) setMoveFrom(square);
-          return;
-        }
-
-        if (
-          (foundMove.color === "w" &&
-            foundMove.piece === "p" &&
-            square[1] === "8") ||
-          (foundMove.color === "b" &&
-            foundMove.piece === "p" &&
-            square[1] === "1")
-        ) {
-          setMoveTo(square);
-          setShowPromotionDialog(true);
-          return;
-        }
-
-        const gameCopy = new Chess(game!.fen());
-        const move = gameCopy.move({
-          from: moveFrom,
-          to: square,
-        });
-
-        if (move === null) {
-          if (getMoveOptions(square)) setMoveFrom(square);
-          return;
-        }
-
-        sendMoveToApi(moveFrom, square);
-
-        setGame(gameCopy);
-        setMoveFrom(null);
-        setMoveTo(null);
-        setOptionSquares({});
-        setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
-      }
-    },
-    [game, moveFrom, moveTo, myPiecesColor, currentColorToPlay]
-  );
+    sendMoveToApi(moveFrom, square);
+    setViewCurrentMoveNumber((prev) => prev + 1);
+    setMoveFrom(null);
+    setMoveTo(null);
+    setOptionSquares({});
+    setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
+  };
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";
@@ -210,16 +193,16 @@ const ChessGame: React.FC = () => {
 
   if (!gameToDisplay) {
     return (
-      <div className="flex mx-auto ">
+      <div className="flex mx-auto">
         <Spinner color="green" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-row gap-8 ">
-      <div className="flex flex-col justify-center items-center gap-4 ">
-        <div className="flex  flex-col w-full h-full gap-4">
+    <div className="flex flex-row gap-12">
+      <div className="flex flex-col justify-center items-center gap-4">
+        <div className="flex flex-col w-full h-full gap-4">
           <Card styles="mx-auto">
             <Typography className="mx-auto flex">Walters</Typography>
           </Card>
@@ -249,10 +232,8 @@ const ChessGame: React.FC = () => {
             <Card>
               <Typography>
                 {myPiecesColor !== currentColorToPlay
-                  ? `Please make a move and check back later. I try to play my moves
-            within 24 hours. Thanks and good luck!`
-                  : `It is currently my turn to play so please check back later. I try to
-            make my moves within 24 hours. Thanks!`}
+                  ? `Please make a move and check back later. I try to play my moves within 24 hours. Thanks and good luck!`
+                  : `It is currently my turn to play so please check back later. I try to make my moves within 24 hours. Thanks!`}
               </Typography>
             </Card>
           </div>
@@ -263,7 +244,7 @@ const ChessGame: React.FC = () => {
           game={game}
           viewCurrentMoveNumber={viewCurrentMoveNumber}
           setViewCurrentMoveNumber={setViewCurrentMoveNumber}
-          numberOfMoves={game?.history().length || 0}
+          numberOfMoves={moveHistory.length}
         />
       </Card>
     </div>
