@@ -16,13 +16,13 @@ export default function InterestsLayout({
           onClick={() => {
             router.push("/");
           }}
-          className="bg-pakistan-green p-2 rounded-full flex gap-1 items-center"
+          className="bg-dark-moss-green p-2 rounded-full flex gap-1 items-center"
         >
           {React.createElement(ArrowLeftIcon, {
             strokeWidth: 2,
             className: "flex h-4 w-4",
           })}
-          <p>Home</p>
+          <p>Back</p>
         </button>
       </div>
       {children}

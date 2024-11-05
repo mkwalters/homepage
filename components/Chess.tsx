@@ -25,18 +25,18 @@ const ChessGame: React.FC = () => {
   const [boardOrientation, setBoardOrientation] =
     useState<BoardOrientation>("white");
 
-  const [viewCurrentMoveNumber, setViewCurrentMoveNumber] = useState<number>(0);
+  const [viewMoveNumber, setViewMoveNumber] = useState<number>(0);
   const [moveHistory, setMoveHistory] = useState<Move[]>([]);
 
   useEffect(() => {
     const updatedGameToDisplay = new Chess();
     moveHistory.forEach((move, index) => {
-      if (index <= viewCurrentMoveNumber) {
+      if (index <= viewMoveNumber) {
         updatedGameToDisplay.move(move);
       }
     });
     setGameToDisplay(updatedGameToDisplay);
-  }, [moveHistory, viewCurrentMoveNumber]);
+  }, [moveHistory, viewMoveNumber]);
 
   useEffect(() => {
     // Fetch all moves from the API and update the game state
@@ -61,7 +61,7 @@ const ChessGame: React.FC = () => {
           setMoveHistory(data?.game?.moves || []);
           setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
-          setViewCurrentMoveNumber(data.game.moves.length - 1);
+          setViewMoveNumber(data.game.moves.length - 1);
           setGame(fetchedGame);
         } else {
           console.error("Failed to fetch moves:", data.error);
@@ -173,7 +173,7 @@ const ChessGame: React.FC = () => {
     });
 
     sendMoveToApi(moveFrom, square);
-    setViewCurrentMoveNumber((prev) => prev + 1);
+    setViewMoveNumber((prev) => prev + 1);
     setMoveFrom(null);
     setMoveTo(null);
     setOptionSquares({});
@@ -242,8 +242,8 @@ const ChessGame: React.FC = () => {
       <Card styles="p-4">
         <ChessScoreboard
           game={game}
-          viewCurrentMoveNumber={viewCurrentMoveNumber}
-          setViewCurrentMoveNumber={setViewCurrentMoveNumber}
+          viewMoveNumber={viewMoveNumber}
+          setViewMoveNumber={setViewMoveNumber}
           numberOfMoves={moveHistory.length}
         />
       </Card>
