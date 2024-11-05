@@ -41,7 +41,6 @@ export const sendEmail = async ({
 
 export const notifyFriendsOfMove = async () => {
   try {
-    // Fetch friends from your Prisma database
     const friends = await prisma.friend.findMany();
 
     if (friends.length === 0) {
@@ -49,7 +48,6 @@ export const notifyFriendsOfMove = async () => {
       return;
     }
 
-    // Iterate over each friend and send an email
     await Promise.all(
       friends.map((friend) =>
         sendEmail({
