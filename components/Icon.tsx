@@ -17,7 +17,9 @@ export const Icon = ({
   styles = "",
   iconStyle = "material-symbols-outlined",
 }: IconProps) => {
-  return <span className={`${iconStyle} ${styles} `}>{iconName}</span>;
+  return (
+    <span className={`select-none ${iconStyle} ${styles} `}>{iconName}</span>
+  );
 };
 
 <svg

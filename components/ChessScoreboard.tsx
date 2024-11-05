@@ -1,21 +1,37 @@
 import { Chess } from "chess.js";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Icon } from "./Icon";
 
 type ChessScoreboardProps = {
   game: Chess | undefined;
-  viewCurrentMoveNumber: number;
-  setViewCurrentMoveNumber: Dispatch<SetStateAction<number>>;
+  viewMoveNumber: number;
+  setViewMoveNumber: Dispatch<SetStateAction<number>>;
   numberOfMoves: number;
 };
 
 export const ChessScoreboard = ({
   game,
-  viewCurrentMoveNumber,
-  setViewCurrentMoveNumber,
+  viewMoveNumber,
+  setViewMoveNumber,
   numberOfMoves,
 }: ChessScoreboardProps) => {
-  // Ensure viewCurrentMoveNumber is within bounds
+  // Ensure viewMoveNumber is within bounds
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log("right");
+      if (event.key === "ArrowRight") {
+        setViewMoveNumber((prev) => Math.min(prev + 1, numberOfMoves - 1));
+      } else if (event.key === "ArrowLeft") {
+        setViewMoveNumber((prev) => Math.max(prev - 1, 0));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [setViewMoveNumber, numberOfMoves]);
 
   return (
     <div className="flex flex-col gap-2 justify-between min-w-48">
@@ -31,17 +47,27 @@ export const ChessScoreboard = ({
                 <p className="flex-1 -mr-7">{moveNumber}.</p>{" "}
                 {/* Move Number */}
                 <p
-                  className={`flex-1 rounded-xl px-2 ${
-                    index === viewCurrentMoveNumber ? "bg-tigers-eye " : ""
+                  className={`flex-1 cursor-pointer rounded-xl px-2  ${
+                    index === viewMoveNumber
+                      ? "bg-tigers-eye"
+                      : "hover:bg-tigers-eye/50"
                   }`}
+                  onClick={() => {
+                    setViewMoveNumber(index);
+                  }}
                 >
                   {whiteMove}
-                </p>{" "}
+                </p>
                 {/* White Move */}
                 <p
-                  className={`flex-1 rounded-xl px-2 ${
-                    index + 1 === viewCurrentMoveNumber ? "bg-tigers-eye" : ""
+                  className={`flex-1 cursor-pointer rounded-xl px-2  ${
+                    index + 1 === viewMoveNumber
+                      ? "bg-tigers-eye"
+                      : "hover:bg-tigers-eye/50"
                   }`}
+                  onClick={() => {
+                    setViewMoveNumber(index + 1);
+                  }}
                 >
                   {blackMove}
                 </p>{" "}
@@ -56,7 +82,7 @@ export const ChessScoreboard = ({
       <div className="flex flex-row items-center justify-center">
         <div
           onClick={() => {
-            setViewCurrentMoveNumber(0);
+            setViewMoveNumber(0);
           }}
           className=" flex cursor-pointer hover:bg-tigers-eye rounded-lg p-1"
         >
@@ -64,7 +90,7 @@ export const ChessScoreboard = ({
         </div>
         <div
           onClick={() => {
-            setViewCurrentMoveNumber(viewCurrentMoveNumber - 1);
+            setViewMoveNumber((prev) => Math.max(prev - 1, 0));
           }}
           className=" flex cursor-pointer hover:bg-tigers-eye rounded-lg p-1"
         >
@@ -73,7 +99,7 @@ export const ChessScoreboard = ({
 
         <div
           onClick={() => {
-            setViewCurrentMoveNumber(viewCurrentMoveNumber + 1);
+            setViewMoveNumber((prev) => Math.min(prev + 1, numberOfMoves - 1));
           }}
           className=" flex cursor-pointer hover:bg-tigers-eye rounded-lg p-1"
         >
@@ -82,7 +108,7 @@ export const ChessScoreboard = ({
 
         <div
           onClick={() => {
-            setViewCurrentMoveNumber(numberOfMoves - 1);
+            setViewMoveNumber(numberOfMoves - 1);
           }}
           className=" flex cursor-pointer hover:bg-tigers-eye rounded-lg p-1"
         >
