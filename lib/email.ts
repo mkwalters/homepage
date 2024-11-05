@@ -21,6 +21,9 @@ export const sendEmail = async ({
     subject,
     text,
     html,
+    asm: {
+      groupId: 25620,
+    },
   };
 
   return sgMail
