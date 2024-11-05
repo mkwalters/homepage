@@ -2,6 +2,7 @@
 import React from "react";
 import Card from "@/components/TypographyCard";
 import { Typography } from "@/components/Typography";
+import Image from "next/image";
 
 const Music = () => {
   return (
@@ -21,7 +22,7 @@ const Music = () => {
             "QBK3Lj7iu4k?si=Xb4qHSY4V3OC-6EG",
             "826U9SJD7uw?si=Wpn4O742-V7duYxk",
           ].map((videoId, index) => (
-            <div key={index} className="w-full ">
+            <div key={index} className="w-full">
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}`}
                 title={`YouTube video player ${index + 1}`}
@@ -35,6 +36,20 @@ const Music = () => {
           ))}
         </div>
       </Card>
+      <Image
+        src="/ledZeppelin.jpg"
+        alt="Lead Guitar"
+        width={130}
+        height={130}
+        className="fixed bottom-8 right-8 rounded-md object-cover"
+      />
+      <Image
+        src="/gratefulDead.jpg"
+        alt="Lead Guitar"
+        width={130}
+        height={130}
+        className="fixed bottom-8 left-8 rounded-md object-cover"
+      />
     </div>
   );
 };
