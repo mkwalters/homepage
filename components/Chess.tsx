@@ -58,7 +58,7 @@ const ChessGame: React.FC = () => {
           setBoardOrientation(
             data.game.playerColor !== "w" ? "white" : "black"
           );
-          setMoveHistory(data.game.moves);
+          setMoveHistory(data?.game?.moves || []);
           setMyPiecesColor(data.game.playerColor as "w" | "b");
           setCurrentColorToPlay(data.game.moves.length % 2 === 0 ? "w" : "b");
           setViewCurrentMoveNumber(data.game.moves.length - 1);
@@ -117,69 +117,68 @@ const ChessGame: React.FC = () => {
     }
   }
 
-  const onSquareClick = useCallback(
-    (square: Square) => {
-      setRightClickedSquares({});
+  const onSquareClick = (square: Square) => {
+    if (currentColorToPlay === myPiecesColor) return;
+    setRightClickedSquares({});
 
-      if (!moveFrom) {
-        if (getMoveOptions(square)) setMoveFrom(square);
-        return;
-      }
+    if (!moveFrom) {
+      if (getMoveOptions(square)) setMoveFrom(square);
+      return;
+    }
 
-      const moves = game.moves({ square: moveFrom, verbose: true }) as Move[];
-      const foundMove = moves.find(
-        (m) => m.from === moveFrom && m.to === square
-      );
+    const moves = game.moves({ square: moveFrom, verbose: true }) as Move[];
+    const foundMove = moves.find((m) => m.from === moveFrom && m.to === square);
 
-      if (!foundMove) {
-        if (getMoveOptions(square)) setMoveFrom(square);
-        return;
-      }
+    if (!foundMove) {
+      if (getMoveOptions(square)) setMoveFrom(square);
+      return;
+    }
 
-      if (
-        (foundMove.color === "w" &&
-          foundMove.piece === "p" &&
-          square[1] === "8") ||
-        (foundMove.color === "b" &&
-          foundMove.piece === "p" &&
-          square[1] === "1")
-      ) {
-        setMoveTo(square);
-        setShowPromotionDialog(true);
-        return;
-      }
+    if (
+      (foundMove.color === "w" &&
+        foundMove.piece === "p" &&
+        square[1] === "8") ||
+      (foundMove.color === "b" && foundMove.piece === "p" && square[1] === "1")
+    ) {
+      setMoveTo(square);
+      setShowPromotionDialog(true);
+      return;
+    }
+    const gameCopy = new Chess();
+    game.history({ verbose: true }).forEach((move) => {
+      gameCopy.move(move);
+    });
 
-      setGame((prevGame) => {
-        // Clone game by recreating it from scratch using all moves
-        const gameCopy = new Chess();
-        prevGame.history({ verbose: true }).forEach((move) => {
-          gameCopy.move(move);
-        });
-
-        // Attempt the new move on the deep-copied game
-        const move = gameCopy.move({
-          from: moveFrom,
-          to: square,
-        });
-
-        if (move === null) {
-          if (getMoveOptions(square)) setMoveFrom(square);
-          return prevGame; // Return previous game if move is invalid
-        }
-
-        sendMoveToApi(moveFrom, square);
-
-        setMoveHistory((prevHistory) => [...prevHistory, move]);
-        setMoveFrom(null);
-        setMoveTo(null);
-        setOptionSquares({});
-        setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
-
-        return gameCopy; // Return the updated game
+    const move = gameCopy.move({
+      from: moveFrom,
+      to: square,
+    });
+    setMoveHistory((prevHistory) => [...prevHistory, move]);
+    setGame((prevGame) => {
+      const gameCopy = new Chess();
+      prevGame.history({ verbose: true }).forEach((move) => {
+        gameCopy.move(move);
       });
-    },
-    [moveFrom, moveTo, myPiecesColor, currentColorToPlay]
-  );
+
+      const move = gameCopy.move({
+        from: moveFrom,
+        to: square,
+      });
+      if (move === null) {
+        if (getMoveOptions(square)) setMoveFrom(square);
+        return prevGame;
+      }
+
+      return gameCopy;
+    });
+
+    sendMoveToApi(moveFrom, square);
+    setViewCurrentMoveNumber((prev) => prev + 1);
+    setMoveFrom(null);
+    setMoveTo(null);
+    setOptionSquares({});
+    setCurrentColorToPlay(currentColorToPlay === "w" ? "b" : "w");
+  };
 
   function onSquareRightClick(square: Square) {
     const colour = "rgba(0, 0, 255, 0.4)";
