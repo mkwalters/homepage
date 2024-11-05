@@ -18,7 +18,6 @@ export const ChessScoreboard = ({
   // Ensure viewMoveNumber is within bounds
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log("right");
       if (event.key === "ArrowRight") {
         setViewMoveNumber((prev) => Math.min(prev + 1, numberOfMoves - 1));
       } else if (event.key === "ArrowLeft") {
