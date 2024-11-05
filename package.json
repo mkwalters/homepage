@@ -21,7 +21,8 @@
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-calendly": "^4.3.1",
     "react-chessboard": "^4.7.2",
-    "react-dom": "19.0.0-rc-02c0e824-20241028"
+    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",

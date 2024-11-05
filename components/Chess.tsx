@@ -236,7 +236,7 @@ const ChessGame: React.FC = () => {
                   ? `Please make a move and check back later. `
                   : `It is currently my turn to play so please check back later.`}
                 If you would like to be notified when I make moves, please
-                provide your email address below:
+                provide your email below:
               </Typography>
               <InputWithButton />
             </Card>
