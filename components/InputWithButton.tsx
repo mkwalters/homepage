@@ -2,7 +2,6 @@ import React from "react";
 import { Input, Button } from "@material-tailwind/react";
 import { Typography } from "./Typography";
 
-// TODO Id like to set a value in browser to see if they've already submitted the email
 export function InputWithButton() {
   const [email, setEmail] = React.useState<string>("");
   const [isValidEmail, setIsValidEmail] = React.useState<boolean>(false);
@@ -50,6 +49,9 @@ export function InputWithButton() {
         onChange={onChange}
         className="pr-20 text-cornsilk focus:bg-transparent focus:ring-0"
         crossOrigin="anonymous"
+        labelProps={{
+          style: { color: "#FEFAE0", opacity: 0.4 }, // cornsilk
+        }}
       />
       <Button
         size="sm"
@@ -62,7 +64,6 @@ export function InputWithButton() {
     </div>
   ) : (
     <div>
-      {/* TODO lets handle 500 state here */}
       <Typography>Email submitted successfully! 🤗</Typography>
     </div>
   );
