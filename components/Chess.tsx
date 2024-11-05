@@ -118,7 +118,7 @@ const ChessGame: React.FC = () => {
   }
 
   const onSquareClick = (square: Square) => {
-    if (currentColorToPlay === myPiecesColor) return;
+    // if (currentColorToPlay === myPiecesColor) return;
     setRightClickedSquares({});
 
     if (!moveFrom) {
