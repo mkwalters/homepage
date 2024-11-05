@@ -36,6 +36,11 @@ model Move {
   @@unique([gameId, moveNumber]) // Ensures unique move numbers per game
 }
 
+model Friend {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+}
+
 enum Color {
   w
   b

@@ -7,6 +7,7 @@ import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
 import Card from "./TypographyCard";
 import React from "react";
 import { ChessScoreboard } from "./ChessScoreboard";
+import { InputWithButton } from "./InputWithButton";
 
 type SquareStyles = Record<string, React.CSSProperties | undefined>;
 
@@ -229,12 +230,15 @@ const ChessGame: React.FC = () => {
             <Typography className="mx-auto flex">Internet</Typography>
           </Card>
           <div className="text-center">
-            <Card>
+            <Card styles="flex-col gap-2">
               <Typography>
                 {myPiecesColor !== currentColorToPlay
-                  ? `Please make a move and check back later. I try to play my moves within 24 hours. Thanks and good luck!`
-                  : `It is currently my turn to play so please check back later. I try to make my moves within 24 hours. Thanks!`}
+                  ? `Please make a move and check back later. `
+                  : `It is currently my turn to play so please check back later.`}
+                If you would like to be notified when I make moves, please
+                provide your email address below:
               </Typography>
+              <InputWithButton />
             </Card>
           </div>
         </div>
