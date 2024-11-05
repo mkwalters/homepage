@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { usePsychadelicBackgroundContext } from "@/context/PsychadelicBackgroundContext";
 
 export default function InterestsLayout({
   children,
@@ -9,8 +10,11 @@ export default function InterestsLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const { isPsychadelic } = usePsychadelicBackgroundContext();
   return (
-    <div className="p-6 w-full">
+    <div
+      className={`p-6 w-full ${isPsychadelic ? "psychedelic-light-show" : ""}`}
+    >
       <div className="flex gap-1">
         <button
           onClick={() => {
