@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Typography, Button } from "@material-tailwind/react";
 import { useCopyToClipboard } from "usehooks-ts";
 import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
@@ -8,8 +8,8 @@ type CopyButtonProps = {
 };
 
 export function CopyButton({ copyText }: CopyButtonProps) {
-  const [_, copy] = useCopyToClipboard();
-  const [copied, setCopied] = React.useState(false);
+  const [, copy] = useCopyToClipboard();
+  const [copied, setCopied] = useState(false);
 
   return (
     <Button
