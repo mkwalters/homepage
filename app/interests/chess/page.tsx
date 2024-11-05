@@ -2,7 +2,7 @@ import Chess from "@/components/Chess";
 
 const ChessPage = () => {
   return (
-    <div className="w-96 h-96 mx-auto ">
+    <div className="flex mx-auto items-center justify-center">
       <Chess />
     </div>
   );
