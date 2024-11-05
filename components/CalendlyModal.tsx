@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import {
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
   Button,
@@ -9,6 +8,7 @@ import {
 import { InlineWidget } from "react-calendly";
 import Card from "./TypographyCard";
 import { Typography } from "./Typography";
+import { CopyButton } from "./CopyButton";
 
 interface DialogDefaultProps {
   open: boolean;
@@ -22,9 +22,10 @@ export function DialogDefault({ open, handleOpen }: DialogDefaultProps) {
       handler={handleOpen}
       className="flex flex-col justify-center items-center bg-pakistan-green p-8"
     >
-      <Card styles="flex flex-col text-center gap-4 max-w-md">
+      <Card styles="flex flex-col text-center gap-4 max-w-md items-center mt-2">
         <Typography>
-          I can always be reached at mitchellkellywalters@gmail.com
+          I can always be reached at{" "}
+          <CopyButton copyText="mitchellkellywalters@gmail.com" />
         </Typography>
 
         <Typography className="max-w-sm">
