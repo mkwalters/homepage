@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { Chess } from "chess.js";
-import { sendEmail } from "@/lib/email";
+import { notifyFriendsOfMove, sendEmail } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
@@ -58,6 +58,8 @@ export async function POST(req: Request) {
         text: "It's your turn to make a move in the chess game. https://mitchellwalters.com/interests/chess",
         html: "<strong>It's your turn to make a move in the chess game.</strong>",
       });
+    } else {
+      notifyFriendsOfMove();
     }
 
     // Check if the game is over

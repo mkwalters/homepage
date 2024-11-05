@@ -1,6 +1,8 @@
 import React from "react";
 import { Input, Button } from "@material-tailwind/react";
+import { Typography } from "./Typography";
 
+// TODO Id like to set a value in browser to see if they've already submitted the email
 export function InputWithButton() {
   const [email, setEmail] = React.useState<string>("");
   const [isValidEmail, setIsValidEmail] = React.useState<boolean>(false);
@@ -16,27 +18,52 @@ export function InputWithButton() {
     setIsValidEmail(emailPattern.test(emailValue));
   };
 
-  return (
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/friend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok || response.status === 403) {
+        setSubmittedEmailSuccessfully(true);
+        console.log("Email submitted successfully");
+      } else {
+        setSubmittedEmailSuccessfully(false);
+        console.error("Failed to submit email");
+      }
+    } catch (error) {
+      setSubmittedEmailSuccessfully(false);
+      console.error("Error submitting email:", error);
+    }
+  };
+
+  return !submittedEmailSuccessfully ? (
     <div className="relative flex w-full max-w-[24rem] mx-auto">
       <Input
         type="email"
         label="Email"
         value={email}
         onChange={onChange}
-        className="pr-20 text-cornsilk focus:bg-transparent  focus:ring-0"
+        className="pr-20 text-cornsilk focus:bg-transparent focus:ring-0"
         crossOrigin="anonymous"
       />
       <Button
         size="sm"
         disabled={!isValidEmail}
         className="!absolute right-1 top-1"
-        onClick={() => {
-          setSubmittedEmailSuccessfully(true);
-          console.log("Email submitted successfully");
-        }}
+        onClick={handleSubmit}
       >
         Invite
       </Button>
+    </div>
+  ) : (
+    <div>
+      {/* TODO lets handle 500 state here */}
+      <Typography>Email submitted successfully! 🤗</Typography>
     </div>
   );
 }
