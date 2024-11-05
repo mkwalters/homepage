@@ -59,7 +59,7 @@ export function InputWithButton() {
         className="!absolute right-1 top-1"
         onClick={handleSubmit}
       >
-        Invite
+        Submit
       </Button>
     </div>
   ) : (
