@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { Chess } from "chess.js";
+import { sendEmail } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
@@ -48,6 +49,16 @@ export async function POST(req: Request) {
         gameId: game.id,
       },
     });
+    // Determine if the last move was made by the opponent
+    const lastMoveColor = sortedMoves.length % 2 === 0 ? "w" : "b";
+    if (lastMoveColor !== game.playerColor) {
+      sendEmail({
+        to: "mitchellkellywalters@gmail.com",
+        subject: "Your move",
+        text: "It's your turn to make a move in the chess game. https://mitchellwalters.com/interests/chess",
+        html: "<strong>It's your turn to make a move in the chess game.</strong>",
+      });
+    }
 
     // Check if the game is over
     const isGameOver = chess.isGameOver();
