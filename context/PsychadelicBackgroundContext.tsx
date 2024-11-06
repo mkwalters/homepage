@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { usePathname } from "next/navigation";
 
 const PsychadelicBackgroundContext = createContext({
   isPsychadelic: false,
@@ -13,8 +20,14 @@ interface PsychadelicBackgroundProviderProps {
 export const PsychadelicBackgroundProvider: React.FC<
   PsychadelicBackgroundProviderProps
 > = ({ children }) => {
-  const [isPsychadelic, setIsPsychedelic] = useState(false);
-  const toggleIsPsychadelic = () => setIsPsychedelic((prevState) => !prevState);
+  const [isPsychadelic, setIsPsychadelic] = useState(false);
+  const toggleIsPsychadelic = () => setIsPsychadelic((prevState) => !prevState);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsPsychadelic(false);
+  }, [pathname]);
 
   return (
     <PsychadelicBackgroundContext.Provider

@@ -47,7 +47,7 @@ export function NavMenu() {
       title: "Resume",
       description: "Learn how we can help you achieve your goals.",
       icon: "work",
-      onClick: () => router.push("interests/pets"),
+      onClick: () => router.push("interests/resume"),
     },
     {
       title: "Get in touch",
