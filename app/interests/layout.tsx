@@ -15,7 +15,7 @@ export default function InterestsLayout({
     <div
       className={`p-6 w-full ${isPsychadelic ? "psychedelic-light-show" : ""}`}
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1 mb-2">
         <button
           onClick={() => {
             router.push("/");
