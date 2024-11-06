@@ -201,9 +201,9 @@ const ChessGame: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row gap-12  max-w-4xl">
+    <div className="flex flex-col lg:flex-row gap-12 max-w-4xl">
       <div className="flex flex-col justify-center items-center gap-4">
-        <div className="flex flex-col w-full h-full gap-4 ">
+        <div className="flex flex-col w-full h-full gap-4">
           <Card styles="mx-auto">
             <Typography className="mx-auto flex">Walters</Typography>
           </Card>
@@ -243,7 +243,7 @@ const ChessGame: React.FC = () => {
           </div>
         </div>
       </div>
-      <Card styles="p-4">
+      <Card styles="p-4 lg:p-4 order-last lg:order-none">
         <ChessScoreboard
           game={game}
           viewMoveNumber={viewMoveNumber}
