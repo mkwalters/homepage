@@ -10,7 +10,7 @@ const Music = () => {
   return (
     <div className="flex justify-center">
       <Card styles="p-4 sm:p-6 w-full max-w-lg">
-        <div className="flex flex-col gap-4 items-center">
+        <div className="flex flex-col gap-4 items-center w-full">
           <Typography styles="text-center max-w-full sm:max-w-96">
             I recorded the following videos during Fall 2020. I play lead
             electric guitar on some of my favorite songs.
