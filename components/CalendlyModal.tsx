@@ -20,7 +20,7 @@ export function DialogDefault({ open, handleOpen }: DialogDefaultProps) {
     <Dialog
       open={open}
       handler={handleOpen}
-      className="flex flex-col justify-center items-center bg-pakistan-green p-8"
+      className="flex flex-col justify-center items-center bg-pakistan-green p-8 gap-2"
     >
       <Card styles="flex flex-col text-center gap-4 max-w-md items-center mt-2">
         <Typography>
@@ -37,14 +37,14 @@ export function DialogDefault({ open, handleOpen }: DialogDefaultProps) {
           <InlineWidget url="https://calendly.com/mitchellkellywalters/30min" />
         </div>
       </DialogBody>
-      <DialogFooter>
+      <DialogFooter className=" ">
         <Button
           variant="text"
           color="red"
           onClick={() => {
             handleOpen(false);
           }}
-          className="mr-1"
+          className="flex flex-1 mr-1"
         >
           <span>Cancel</span>
         </Button>
