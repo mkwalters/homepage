@@ -18,40 +18,43 @@ export function NavMenu() {
   const router = useRouter();
   const [calendlyModalOpen, setCalendlyModalOpen] = React.useState(false);
 
+  // Icon name maps 1:1 with "Icon name" on https://fonts.google.com/icons
+  // Icon name can be found at the bottom of the right sidebar
   const navListMenuItems: NavListMenuItem[] = [
     {
       title: "Chess",
-      description: "Learn how we can help you achieve your goals.",
+      description: "",
       icon: "chess_pawn",
       onClick: () => router.push("interests/chess"),
     },
     {
-      title: "Puzzles",
-      description: "Find the perfect solution for your needs.",
-      icon: "toys_and_games",
-      onClick: () => router.push(""),
+      title: "Src",
+      description: "",
+      icon: "data_object",
+      onClick: () => router.push("https://github.com/mkwalters/homepage"),
     },
+
     {
       title: "Pictures",
-      description: "Meet and learn about our dedication",
+      description: "",
       icon: "photo_camera",
-      onClick: () => router.push("interests/pets"),
+      onClick: () => router.push("interests/pictures"),
     },
     {
       title: "Music",
-      description: "Learn how we can help you achieve your goals.",
+      description: "",
       icon: "music_note",
       onClick: () => router.push("interests/music"),
     },
     {
       title: "Resume",
-      description: "Learn how we can help you achieve your goals.",
+      description: "",
       icon: "work",
       onClick: () => router.push("interests/resume"),
     },
     {
       title: "Get in touch",
-      description: "Learn how we can help you achieve your goals.",
+      description: "",
       icon: "call",
       onClick: () => {
         setCalendlyModalOpen(true);
