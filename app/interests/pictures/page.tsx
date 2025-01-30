@@ -5,7 +5,7 @@ import { Gallery } from "@/components/Gallery";
 const Pets = () => {
   return (
     <div>
-      <Gallery images={["/demiAtThePark.jpg", "/yoda.jpeg"]} />
+      <Gallery />
     </div>
   );
 };
